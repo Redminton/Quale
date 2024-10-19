@@ -8,6 +8,7 @@ async function init() {
 
     map.innerMap.setOptions({
         mapTypeControl: false
+
     });
 
     placePicker.addEventListener('gmpx-placechange', () => {

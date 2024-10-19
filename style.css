@@ -5,6 +5,7 @@ body {
     padding: 0;
 }
 
-.place-picker-container {
-    padding: 20px;
+nav {
+    justify-content: center;
+    align-items: center;
 }
