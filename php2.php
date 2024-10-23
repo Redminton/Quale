@@ -1,7 +1,7 @@
 <?php
 include 'config.php';
 
-//$pdo = $conn;
+$pdo = $conn;
 
 
 
