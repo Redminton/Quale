@@ -1,28 +1,23 @@
 <?php
 include 'config.php';
 
-$pdo = $conn;
 
+try {
+    $query = "SHOW TABLES";
+    $stmt = $pdo->query($query);
 
-
-if ($conn->connect_error) {
-    die('Erro de Conexão: ' . $conn->connect_error);
-}
-
-// Busca todas as tabelas do banco de dados
-$query = "SHOW TABLES";
-$result = $conn->query($query);
-
-// Verifica e retorna as tabelas em formato JSON
-if ($result->num_rows > 0) {
-    $tables = [];
-    while ($row = $result->fetch_array()) {
-        $tables[] = $row[0];
+    // Verifica e retorna as tabelas em formato JSON
+    if ($stmt->rowCount() > 0) {
+        $tables = [];
+        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $tables[] = $row[0];
+        }
+        echo json_encode($tables);
+    } else {
+        echo json_encode(['error' => 'Nenhuma tabela encontrada.']);
     }
-    echo json_encode($tables);
-} else {
-    echo json_encode(['error' => 'Nenhuma tabela encontrada.']);
+} catch (PDOException $e) {
+    echo json_encode(['error' => 'Erro de Conexão: ' . $e->getMessage()]);
 }
 
-// Fecha a conexão
-$conn->close();
+$pdo = null;

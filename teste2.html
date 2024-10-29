@@ -20,21 +20,19 @@
             height: 100%
         }
     </style>
-    <script type="text/javascript"
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCilGvyLOyIkVM6UqxNZdg4XhIXEbyM0j4">
-        </script>
-    <script type=" text/javascript" src="pontos.js">
-    </script>
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCilGvyLOyIkVM6UqxNZdg4XhIXEbyM0j4&callback=initMap&v=weekly&solution_channel=GMP_CCS_geolocation_v2"
+        defer></script>
 </head>
 
 
-<body onload="initialize()">
-    <div id="map_canvas" style="width:100%; height:100%"></div>
+<body>
+    <div id="map" style="width:100%; height:100%"></div>
 
     <div onmouseover="debug()">tesdcdce</div>
 
 
-    <script src="pontos.js"></script>
+    <script src="pontos2.js"></script>
 </body>
 
 </html>
