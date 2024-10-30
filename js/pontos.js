@@ -4,7 +4,7 @@ let map, info, marker; // Variável global para o mapa
 function initialize() {
     var mapOptions = {
         center: new google.maps.LatLng(-28.2670623, -54.2263399),
-        zoom: 8,
+        zoom: 14,
         mapTypeId: google.maps.MapTypeId.ROADMAP
     };
     map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
@@ -25,14 +25,14 @@ function showPosition(position) {
     const latitude = position.coords.latitude;
     const longitude = position.coords.longitude;
 
-    // Define a posição do usuário no mapa
+
     const userLocation = { lat: latitude, lng: longitude };
     console.log(userLocation);
-    //map.setCenter(userLocation);
+    map.setCenter(userLocation);
 
 
     info.setPosition(userLocation);
-    info.setContent("Location found.");
+    info.setContent("Voce esta aqui");
     info.open(map);
     map.setCenter(userLocation);
 }
@@ -81,10 +81,3 @@ function debug() {
         console.log("Erro ao carregar o JSON: " + textStatus + ", " + error);
     });
 }
-
-/* Inicialize o mapa quando o documento estiver pronto
-$(document).ready(function () {
-    initialize(); // Inicializa o mapa e carrega os pontos
-    debug();      // Debug para verificar o conteúdo do JSON
-    local();
-}); */
