@@ -9,6 +9,28 @@
     <link rel="stylesheet" href="./style.css" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <title>Painel de Controle</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <style>
+        body {
+            padding: 20px;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+        }
+    </style>
+
+
+
+
 
 </head>
 
@@ -57,140 +79,78 @@
                 </nav>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-6">
-                <h3>
-                    Painel de Controle
-                </h3>
-                <form role="form">
-                    <div class="form-group">
 
-                        <label for="exampleInputEmail1">
-                            Email address
-                        </label>
-                        <input type="email" class="form-control" id="exampleInputEmail1" />
-                    </div>
-                    <div class="form-group">
 
-                        <label for="exampleInputPassword1">
-                            Password
-                        </label>
-                        <input type="password" class="form-control" id="exampleInputPassword1" />
-                    </div>
-                    <div class="form-group">
 
-                        <label for="exampleInputFile">
-                            File input
-                        </label>
-                        <input type="file" class="form-control-file" id="exampleInputFile" />
-                        <p class="help-block">
-                            Example block-level help text here.
-                        </p>
-                    </div>
-                    <div class="checkbox">
 
-                        <label>
-                            <input type="checkbox" /> Check me out
-                        </label>
-                    </div>
-                    <button type="submit" class="btn btn-primary">
-                        Submit
-                    </button>
-                </form>
-            </div>
-            <div class="col-md-6">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>
-                                #
-                            </th>
-                            <th>
-                                Product
-                            </th>
-                            <th>
-                                Payment Taken
-                            </th>
-                            <th>
-                                Status
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                1
-                            </td>
-                            <td>
-                                TB - Monthly
-                            </td>
-                            <td>
-                                01/04/2012
-                            </td>
-                            <td>
-                                Default
-                            </td>
-                        </tr>
-                        <tr class="table-active">
-                            <td>
-                                1
-                            </td>
-                            <td>
-                                TB - Monthly
-                            </td>
-                            <td>
-                                01/04/2012
-                            </td>
-                            <td>
-                                Approved
-                            </td>
-                        </tr>
-                        <tr class="table-success">
-                            <td>
-                                2
-                            </td>
-                            <td>
-                                TB - Monthly
-                            </td>
-                            <td>
-                                02/04/2012
-                            </td>
-                            <td>
-                                Declined
-                            </td>
-                        </tr>
-                        <tr class="table-warning">
-                            <td>
-                                3
-                            </td>
-                            <td>
-                                TB - Monthly
-                            </td>
-                            <td>
-                                03/04/2012
-                            </td>
-                            <td>
-                                Pending
-                            </td>
-                        </tr>
-                        <tr class="table-danger">
-                            <td>
-                                4
-                            </td>
-                            <td>
-                                TB - Monthly
-                            </td>
-                            <td>
-                                04/04/2012
-                            </td>
-                            <td>
-                                Call in to confirm
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <div class="container">
+            <h1 class="text-center">Gerenciar Veiculos</h1>
+
+
+            <form id="veiculoForm">
+                <input type="hidden" id="id_veiculo" name="id_veiculo">
+
+                <div class="mb-3">
+                    <label for="id_categoria" class="form-label">Categoria:</label>
+                    <select id="id_categoria" name="id_categoria" class="form-select" required>
+                        <option value="" disabled selected>Escolha uma categoria</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="ano_modelo" class="form-label">Ano Modelo:</label>
+                    <input type="date" id="ano_modelo" name="ano_modelo" class="form-control" min="1950-01-01" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="nome_veiculo" class="form-label">Nome Veiculo:</label>
+                    <input type="text" id="nome_veiculo" name="nome_veiculo" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="placa_veiculo" class="form-label">Placa Veiculo:</label>
+                    <input type="text" id="placa_veiculo" name="placa_veiculo" class="form-control" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Salvar</button>
+            </form>
+
+
+            <table id="tabelaVeiculos" class="table table-hover mt-4">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Categoria</th>
+                        <th>Ano Modelo</th>
+                        <th>Nome Veiculo</th>
+                        <th>Placa Veiculo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Veiculos serão inseridos aqui via AJAX -->
+                </tbody>
+            </table>
         </div>
+
 
 
         <div class="row">
@@ -201,6 +161,122 @@
                 <ul id="tablesList"></ul>
             </div>h3. Lorem ipsum dolor sit amet.
         </div>
+
+
+        <script>
+            $(document).ready(function () {
+                carregarCategorias();
+                carregarVeiculos();
+                //     carregarMotoristas();
+
+                // Função para carregar categorias no select
+                function carregarCategorias() {
+                    $.ajax({
+                        url: 'php/categorias.php',
+                        method: 'GET',
+                        dataType: 'json',
+                        success: function (categorias) {
+                            categorias.forEach(function (categoria) {
+                                $('#id_categoria').append(new Option(categoria.nome_categoria, categoria.id_categoria));
+                            });
+                        }
+                    });
+                }
+
+
+
+                $('#veiculoForm').on('submit', function (e) {
+                    e.preventDefault();
+                    let dados = $(this).serialize();
+                    $.ajax({
+                        url: 'salvar_veiculo.php',
+                        method: 'POST',
+                        data: dados,
+                        success: function (response) {
+
+                            carregarVeiculo();
+                            $('#veiculoForm')[0].reset();  // Limpar o formulário
+                        }
+                    });
+                });
+            });
+
+
+            function editarVeiculo(id_veiculo) {
+                $.ajax({
+                    url: 'get_veiculo.php',
+                    method: 'GET',
+                    data: { id_veiculo: id_veiculo },
+                    dataType: 'json',
+                    success: function (veiculo) {
+                        $('#id_veiculo').val(veiculo.id_veiculo);
+                        $('#id_categoria').val(veiculo.id_categoria);
+                        $('#ano_modelo').val(veiculo.ano_modelo);
+                        $('#nome_veiculo').val(veiculo.nome_veiculo);
+                        $('#placa_veiculo').val(veiculo.placa_veiculo);
+                    }
+                });
+            }
+
+
+            function carregarVeiculos() {
+                $.ajax({
+                    url: 'php/veiculos.php',
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function (veiculos) {
+                        let linhas = '';
+                        veiculos.forEach(function (veiculo) {
+                            linhas += `<tr>
+                                <td>${veiculo.id_veiculo}</td>
+                                <td>${veiculo.nome_categoria}</td>
+                                <td>${veiculo.ano_modelo}</td>
+                                <td>${veiculo.nome_veiculo}</td>
+                                <td>${veiculo.placa_veiculo}</td>
+                                <td>
+                                    <button class="btn btn-sm btn-warning me-1" onclick="editarVeiculo(${veiculo.id_veiculo})">Editar</button>
+                                    <button class="btn btn-sm btn-danger" onclick="deletarVeiculo(${veiculo.id_veiculo})">Deletar</button>
+                                </td>
+                            </tr>`;
+                        });
+                        $('#tabelaVeiculos tbody').html(linhas);
+                    }
+                });
+            }
+
+
+
+            function deletarVeiculo(id_veiculo) {
+                if (confirm("Tem certeza que deseja deletar este Veiculo?")) {
+                    $.ajax({
+                        url: 'deletar_veiculo.php',
+                        method: 'POST',
+                        data: { id_veiculo: id_veiculo },
+                        success: function (response) {
+                            console.log('delete');
+                            carregarVeiculos();
+
+                        }
+                    });
+                }
+            }
+        </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         <script>
             $(document).ready(function () {
