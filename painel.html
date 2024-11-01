@@ -130,7 +130,10 @@
                     <label for="placa_veiculo" class="form-label">Placa Veiculo:</label>
                     <input type="text" id="placa_veiculo" name="placa_veiculo" class="form-control" required>
                 </div>
-
+                <div class="mb-3">
+                    <label for="media_veiculo" class="form-label">media veiculo:</label>
+                    <input type="text" id="media_veiculo" name="media_veiculo" class="form-control" required>
+                </div>
                 <button type="submit" class="btn btn-primary">Salvar</button>
             </form>
 
@@ -143,6 +146,7 @@
                         <th>Ano Modelo</th>
                         <th>Nome Veiculo</th>
                         <th>Placa Veiculo</th>
+                        <th>Media veiculo</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -214,6 +218,7 @@
                         $('#ano_modelo').val(veiculo.ano_modelo);
                         $('#nome_veiculo').val(veiculo.nome_veiculo);
                         $('#placa_veiculo').val(veiculo.placa_veiculo);
+                        $('#media_veiculo').val(veiculo.media_veiculo);
                     }
                 });
             }
@@ -233,6 +238,7 @@
                                 <td>${veiculo.ano_modelo}</td>
                                 <td>${veiculo.nome_veiculo}</td>
                                 <td>${veiculo.placa_veiculo}</td>
+                                 <td>${veiculo.media_veiculo}</td>
                                 <td>
                                     <button class="btn btn-sm btn-warning me-1" onclick="editarVeiculo(${veiculo.id_veiculo})">Editar</button>
                                     <button class="btn btn-sm btn-danger" onclick="deletarVeiculo(${veiculo.id_veiculo})">Deletar</button>
