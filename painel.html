@@ -186,14 +186,11 @@
                         }
                     });
                 }
-
-
-
                 $('#veiculoForm').on('submit', function (e) {
                     e.preventDefault();
                     let dados = $(this).serialize();
                     $.ajax({
-                        url: 'salvar_veiculo.php',
+                        url: 'salvarveiculo.php',
                         method: 'POST',
                         data: dados,
                         success: function (response) {
@@ -204,8 +201,6 @@
                     });
                 });
             });
-
-
             function editarVeiculo(id_veiculo) {
                 $.ajax({
                     url: 'get_veiculo.php',
@@ -222,7 +217,6 @@
                     }
                 });
             }
-
 
             function carregarVeiculos() {
                 $.ajax({
