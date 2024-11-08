@@ -190,14 +190,18 @@
                     e.preventDefault();
                     let dados = $(this).serialize();
                     $.ajax({
-                        url: 'salvarveiculo.php',
+                        url: 'php/salvarveiculo.php',
                         method: 'POST',
                         data: dados,
                         success: function (response) {
-
+                            console.log("Foi");
                             carregarVeiculo();
                             $('#veiculoForm')[0].reset();  // Limpar o formulário
+                        },
+                        error: function (response) {
+                            console.log(response);
                         }
+
                     });
                 });
             });

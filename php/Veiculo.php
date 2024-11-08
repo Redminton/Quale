@@ -1,5 +1,4 @@
 <?php
-
 class Veiculo
 {
     private $pdo;
