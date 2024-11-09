@@ -195,7 +195,7 @@
                         data: dados,
                         success: function (response) {
                             console.log("Foi");
-                            carregarVeiculo();
+                            carregarVeiculos();
                             $('#veiculoForm')[0].reset();  // Limpar o formulário
                         },
                         error: function (response) {
@@ -204,7 +204,40 @@
 
                     });
                 });
+                function carregarVeiculos() {
+                    $.ajax({
+                        url: 'php/veiculos.php',
+                        method: 'GET',
+                        dataType: 'json',
+                        success: function (veiculos) {
+                            let linhas = '';
+                            veiculos.forEach(function (veiculo) {
+                                linhas += `<tr>
+                                <td>${veiculo.id_veiculo}</td>
+                                <td>${veiculo.nome_categoria}</td>
+                                <td>${veiculo.ano_modelo}</td>
+                                <td>${veiculo.nome_veiculo}</td>
+                                <td>${veiculo.placa_veiculo}</td>
+                                 <td>${veiculo.media_veiculo}</td>
+                                <td>
+                                    <button class="btn btn-sm btn-warning me-1" onclick="editarVeiculo(${veiculo.id_veiculo})">Editar</button>
+                                    <button class="btn btn-sm btn-danger" onclick="deletarVeiculo(${veiculo.id_veiculo})">Deletar</button>
+                                </td>
+                            </tr>`;
+                            });
+                            $('#tabelaVeiculos tbody').html(linhas);
+                        }
+                    });
+                }
+
+
+
+
+
+
+
             });
+
             function editarVeiculo(id_veiculo) {
                 $.ajax({
                     url: 'get_veiculo.php',
@@ -222,31 +255,6 @@
                 });
             }
 
-            function carregarVeiculos() {
-                $.ajax({
-                    url: 'php/veiculos.php',
-                    method: 'GET',
-                    dataType: 'json',
-                    success: function (veiculos) {
-                        let linhas = '';
-                        veiculos.forEach(function (veiculo) {
-                            linhas += `<tr>
-                                <td>${veiculo.id_veiculo}</td>
-                                <td>${veiculo.nome_categoria}</td>
-                                <td>${veiculo.ano_modelo}</td>
-                                <td>${veiculo.nome_veiculo}</td>
-                                <td>${veiculo.placa_veiculo}</td>
-                                 <td>${veiculo.media_veiculo}</td>
-                                <td>
-                                    <button class="btn btn-sm btn-warning me-1" onclick="editarVeiculo(${veiculo.id_veiculo})">Editar</button>
-                                    <button class="btn btn-sm btn-danger" onclick="deletarVeiculo(${veiculo.id_veiculo})">Deletar</button>
-                                </td>
-                            </tr>`;
-                        });
-                        $('#tabelaVeiculos tbody').html(linhas);
-                    }
-                });
-            }
 
 
 
