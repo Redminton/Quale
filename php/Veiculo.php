@@ -78,9 +78,9 @@ class Veiculo
     // Método para obter todos os veículos (JOIN com categoria para nome da categoria)
     public function getAll()
     {
-        $query = $this->pdo->query("SELECT veiculo.id_veiculo, categoria.nome_categoria, veiculo.ano_modelo, veiculo.nome_veiculo, veiculo.placa_veiculo, veiculo.media_veiculo
+        $query = $this->pdo->query("SELECT veiculo.id_veiculo, categoriaVeiculo.nome_categoria, veiculo.ano_modelo, veiculo.nome_veiculo, veiculo.placa_veiculo, veiculo.media_veiculo
                                     FROM veiculo
-                                    JOIN categoria ON veiculo.id_categoria = categoria.id_categoria");
+                                    JOIN categoriaVeiculo ON veiculo.id_categoria = categoriaVeiculo.id_categoria");
         return $query->fetchAll(PDO::FETCH_ASSOC);
     }
 
