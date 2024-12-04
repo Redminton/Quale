@@ -84,13 +84,18 @@ class Veiculo
         return $query->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Método para salvar um novo veículo
+
+
     public function save()
     {
-        $stmt = $this->pdo->prepare("INSERT INTO veiculo (id_categoria, ano_modelo, nome_veiculo, placa_veiculo, media_veiculo) VALUES (?, ?, ?, ?, ?)");
-        return $stmt->execute([$this->id_categoria, $this->ano_modelo, $this->nome_veiculo, $this->placa_veiculo, $this->media_veiculo]);
+        if ($this->getIdVeiculo()) {
+            $stmt = $this->pdo->prepare("UPDATE  veiculo SET id_categoria = ?, ano_modelo = ?, nome_veiculo= ?, placa_veiculo= ?, media_veiculo= ? WHERE id_veiculo = ?");
+            return $stmt->execute([$this->id_categoria, $this->ano_modelo, $this->nome_veiculo, $this->placa_veiculo, $this->media_veiculo, $this->id_veiculo]);
+        } else {
+            $stmt = $this->pdo->prepare("INSERT INTO veiculo (id_categoria, ano_modelo, nome_veiculo, placa_veiculo, media_veiculo) VALUES (?, ?, ?, ?, ?)");
+            return $stmt->execute([$this->id_categoria, $this->ano_modelo, $this->nome_veiculo, $this->placa_veiculo, $this->media_veiculo]);
+        }
     }
-
     // Método para editar um veículo existente
     public function update($id_veiculo)
     {

@@ -1,5 +1,5 @@
 <?php
-include 'config.php';
+include '../config.php';
 include 'Categoria.php';
 $categoria = new Categoria($pdo);
 $categorias = $categoria->getAll();

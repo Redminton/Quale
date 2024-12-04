@@ -113,7 +113,7 @@ include './testa_sessaoAdmin.php';
                             <div class="mb-3">
                                 <label for="id_categoria" class="form-label">Categoria:</label>
                                 <select id="id_categoria" name="id_categoria" class="form-select" required>
-                                    <option value="" disabled selected>Escolha uma categoria</option>
+                                    <option value="">Escolha uma categoria</option>
                                 </select>
                             </div>
                             <div class="mb-3">
@@ -133,27 +133,47 @@ include './testa_sessaoAdmin.php';
                                 <input type="text" id="media_veiculo" name="media_veiculo" class="form-control" required>
                             </div>
                             <button type="submit" class="btn btn-primary">Salvar</button>
+                            <br>
                         </form>
+                        <table id="tabelaVeiculos" class="table table-hover mt-4">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Categoria</th>
+                                    <th>Ano Modelo</th>
+                                    <th>Nome Veiculo</th>
+                                    <th>Placa Veiculo</th>
+                                    <th>Media veiculo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Veiculos serão inseridos aqui via AJAX -->
+                            </tbody>
+                        </table>
                     </div>
 
-                    <!-- Formulário de Motorista (exemplo) -->
-                    <div id="formMotorista" class="form-container">
-                        <p>Formulário de motoristas será exibido aqui...</p>
-                    </div>
 
-                    <!-- Formulário de Categoria (exemplo) -->
-                    <div id="formCategoria" class="form-container">
-                        <p>Formulário de categorias será exibido aqui...</p>
-                    </div>
 
-                    <!-- Tabelas -->
-                    <div id="tabelas" class="form-container">
-                        <h2>Listagem de Tabelas do Banco de Dados</h2>
-                        <ul id="tablesList"></ul>
-                    </div>
+                </div>
+
+                <!-- Formulário de Motorista (exemplo) -->
+                <div id="formMotorista" class="form-container">
+                    <p>Formulário de motoristas será exibido aqui...</p>
+                </div>
+
+                <!-- Formulário de Categoria (exemplo) -->
+                <div id="formCategoria" class="form-container">
+                    <p>Formulário de categorias será exibido aqui...</p>
+                </div>
+
+                <!-- Tabelas -->
+                <div id="tabelas" class="form-container">
+                    <h2>Listagem de Tabelas do Banco de Dados</h2>
+                    <ul id="tablesList"></ul>
                 </div>
             </div>
         </div>
+    </div>
 
 
 
@@ -190,11 +210,11 @@ include './testa_sessaoAdmin.php';
 
 
 
+    <br>
+    </div>
 
 
-
-
-        <!--<div class="row d-flex ">
+    <!--<div class="row d-flex ">
             <div class="col-md-12    ">
                 <h3>
 
@@ -210,200 +230,207 @@ include './testa_sessaoAdmin.php';
 
 
 
-        <script>
-            $(document).ready(function() {
-                carregarCategorias();
-                carregarVeiculos();
-                //     carregarMotoristas();
+    <script>
+        $(document).ready(function() {
+            carregarCategorias();
+            carregarVeiculos();
 
-                // Função para carregar categorias no select
-                function carregarCategorias() {
-                    $.ajax({
-                        url: '../categorias.php',
-                        method: 'GET',
-                        dataType: 'json',
-                        success: function(categorias) {
-                            categorias.forEach(function(categoria) {
-                                $('#id_categoria').append(new Option(categoria.nome_categoria, categoria.id_categoria));
-                            });
-                        }
-                    });
-                }
-                $('#veiculoForm').on('submit', function(e) {
-                    e.preventDefault();
-                    let dados = $(this).serialize();
-                    $.ajax({
-                        url: '../salvarveiculo.php',
-                        method: 'POST',
-                        data: dados,
-                        success: function(response) {
-                            console.log("Foi");
-                            carregarVeiculos();
-                            $('#veiculoForm')[0].reset(); // Limpar o formulário
-                        },
-                        error: function(response) {
-                            console.log(response);
-                        }
-
-                    });
-                });
-
-                function carregarVeiculos() {
-                    $.ajax({
-                        url: '../veiculos.php',
-                        method: 'GET',
-                        dataType: 'json',
-                        success: function(veiculos) {
-                            let linhas = '';
-                            veiculos.forEach(function(veiculo) {
-                                linhas += `<tr>
-                                <td>${veiculo.id_veiculo}</td>
-                                <td>${veiculo.nome_categoria}</td>
-                                <td>${veiculo.ano_modelo}</td>
-                                <td>${veiculo.nome_veiculo}</td>
-                                <td>${veiculo.placa_veiculo}</td>
-                                 <td>${veiculo.media_veiculo}</td>
-                                <td>
-                                    <button class="btn btn-sm btn-warning me-1" onclick="editarVeiculo(${veiculo.id_veiculo})">Editar</button>
-                                    <button class="btn btn-sm btn-danger" onclick="deletarVeiculo(${veiculo.id_veiculo})">Deletar</button>
-                                </td>
-                            </tr>`;
-                            });
-                            $('#tabelaVeiculos tbody').html(linhas);
-                        }
-                    });
-                }
-
-
-
-
-
-
-
-            });
-
-            function editarVeiculo(id_veiculo) {
+            // Função para carregar categorias no select
+            function carregarCategorias() {
                 $.ajax({
-                    url: '../get_veiculo.php',
+                    url: '../veiculo/categorias.php',
                     method: 'GET',
-                    data: {
-                        id_veiculo: id_veiculo
-                    },
                     dataType: 'json',
-                    success: function(veiculo) {
-                        $('#id_veiculo').val(veiculo.id_veiculo);
-                        $('#id_categoria').val(veiculo.id_categoria);
-                        $('#ano_modelo').val(veiculo.ano_modelo);
-                        $('#nome_veiculo').val(veiculo.nome_veiculo);
-                        $('#placa_veiculo').val(veiculo.placa_veiculo);
-                        $('#media_veiculo').val(veiculo.media_veiculo);
+                    success: function(categorias) {
+
+                        $('#id_categoria').empty();
+
+                        $('#id_categoria').append(new Option('Escolha uma categoria', '', true, false));
+
+
+
+
+                        categorias.forEach(function(categoria) {
+                            $('#id_categoria').append(new Option(categoria.nome_categoria, categoria.id_categoria));
+                        });
                     }
                 });
             }
 
-
-
-
-            function deletarVeiculo(id_veiculo) {
-                if (confirm("Tem certeza que deseja deletar este Veiculo?")) {
-                    $.ajax({
-                        url: '../deletar_veiculo.php',
-                        method: 'POST',
-                        data: {
-                            id_veiculo: id_veiculo
-                        },
-                        success: function(response) {
-                            console.log('delete');
-                            carregarVeiculos();
-
-                        }
-                    });
-                }
-            }
-        </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        <script>
-            $(document).ready(function() {
-                function carregartables() {
-                    //  $('#loadTables').on('click', function () {
-                    $.ajax({
-                        url: '../php2.php',
-                        method: 'GET',
-                        dataType: 'json',
-                        success: function(response) {
-                            setTimeout(function() {
-                                carregartables()
-                            }, 10000)
-
-                            $('#tablesList').empty();
-
-                            if (response.error) {
-                                $('#tablesList').append('<li>' + response.error + '</li>');
-                            } else {
-                                $.each(response, function(index, table) {
-                                    $('#tablesList').append('<li>' + table + '</li>');
-                                });
-                            }
-                        },
-                        error: function() {
-                            alert('Erro ao buscar as tabelas.');
-                        }
-                    });
-                    //   });
-
-
-                    console.log('teste 10 segundos');
-                }
-                carregartables();
-
-
-
-
-            });
-        </script>
-
-
-
-
-
-
-
-
-
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-            crossorigin="anonymous"></script>
-
-        <script>
-            // Função para alternar entre abrir e fechar os formulários e tabelas
-            function toggleContent(contentId) {
-                // Esconde todos os formulários
-                $(".form-container").hide();
-                // Exibe o conteúdo desejado
-                $(contentId).toggle();
+            // Função para carregar veículos na tabela
+            function carregarVeiculos() {
+                $.ajax({
+                    url: '../veiculo/veiculos.php',
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function(veiculos) {
+                        setTimeout(function() {
+                            carregarVeiculos()
+                        }, 5000)
+                        let linhas = '';
+                        veiculos.forEach(function(veiculo) {
+                            linhas += `<tr>
+                        <td>${veiculo.id_veiculo}</td>
+                        <td>${veiculo.nome_categoria}</td>
+                        <td>${veiculo.ano_modelo}</td>
+                        <td>${veiculo.nome_veiculo}</td>
+                        <td>${veiculo.placa_veiculo}</td>
+                        <td>${veiculo.media_veiculo}</td>
+                        <td>
+                            <button class="btn btn-sm btn-warning me-1" onclick="editarVeiculo(${veiculo.id_veiculo})">Editar</button>
+                            <button class="btn btn-sm btn-danger" onclick="deletarVeiculo(${veiculo.id_veiculo})">Deletar</button>
+                        </td>
+                    </tr>`;
+                        });
+                        $('#tabelaVeiculos tbody').html(linhas);
+                    }
+                });
             }
 
-            // Quando a página carrega, oculta todos os formulários
-            $(document).ready(function() {
-                $(".form-container").hide();
+            // Salvar veículo
+            $('#veiculoForm').on('submit', function(e) {
+                e.preventDefault();
+                let dados = $(this).serialize();
+                $.ajax({
+                    url: '../veiculo/salvarveiculo.php',
+                    method: 'POST',
+                    data: dados,
+                    success: function(response) {
+                        carregarVeiculos();
+                        $('#veiculoForm')[0].reset(); // Limpar o formulário
+                    },
+                    error: function(response) {
+                        console.log(response);
+                    }
+                });
             });
-        </script>
+        });
+
+        function editarVeiculo(id_veiculo) {
+            $.ajax({
+                url: '../veiculo/get_veiculo.php',
+                method: 'GET',
+                data: {
+                    id_veiculo: id_veiculo
+                },
+                dataType: 'json',
+                success: function(veiculo) {
+
+                    $('#id_veiculo').val(veiculo.id_veiculo);
+                    $('#ano_modelo').val(veiculo.ano_modelo);
+                    $('#nome_veiculo').val(veiculo.nome_veiculo);
+                    $('#placa_veiculo').val(veiculo.placa_veiculo);
+                    $('#media_veiculo').val(veiculo.media_veiculo);
+
+                    // Atualizar o select de categorias para a categoria do veículo
+                    $('#id_categoria').val(veiculo.id_categoria); // Seleciona a categoria do veículo no select
+                }
+            });
+        }
+
+
+        // Função para deletar o veículo
+        function deletarVeiculo(id_veiculo) {
+            if (confirm("Tem certeza que deseja deletar este Veiculo?")) {
+                $.ajax({
+                    url: '../veiculo/deletar_veiculo.php',
+                    method: 'POST',
+                    data: {
+                        id_veiculo: id_veiculo
+                    },
+                    success: function(response) {
+                        console.log('Veículo deletado com sucesso!');
+                    },
+                    error: function(response) {
+                        console.log('Erro ao deletar o veículo:', response);
+                    }
+                });
+            }
+        }
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <script>
+        $(document).ready(function() {
+            function carregartables() {
+                //  $('#loadTables').on('click', function () {
+                $.ajax({
+                    url: '../tabelas/php2.php',
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        setTimeout(function() {
+                            carregartables()
+                        }, 10000)
+
+                        $('#tablesList').empty();
+
+                        if (response.error) {
+                            $('#tablesList').append('<li>' + response.error + '</li>');
+                        } else {
+                            $.each(response, function(index, table) {
+                                $('#tablesList').append('<li>' + table + '</li>');
+                            });
+                        }
+                    },
+                    error: function() {
+                        alert('Erro ao buscar as tabelas.');
+                    }
+                });
+                //   });
+
+
+                console.log('teste 10 segundos');
+            }
+            carregartables();
+
+
+
+
+        });
+    </script>
+
+
+
+
+
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+
+    <script>
+        // Função para alternar entre abrir e fechar os formulários e tabelas
+        function toggleContent(contentId) {
+            // Esconde todos os formulários
+            $(".form-container").hide();
+            // Exibe o conteúdo desejado
+            $(contentId).toggle();
+        }
+
+        // Quando a página carrega, oculta todos os formulários
+        $(document).ready(function() {
+            $(".form-container").hide();
+        });
+    </script>
 </body>
 
 </html>
