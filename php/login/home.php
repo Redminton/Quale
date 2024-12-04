@@ -52,7 +52,7 @@ include './testa_sessao.php';
             <!-- Barra lateral -->
             <div class="col-3 sidebar d-flex flex-column">
                 <h5>Menu de Navegação</h5>
-                <a href="conectar.php"><button class="btn btn-primary mb-2">Acessar</button></a>
+                <a href="historico.php"><button class="btn btn-primary mb-2">Histórico de Viagens</button></a>
                 <button class="btn btn-secondary mb-2" onclick="precos()">Ver Preços</button>
                 <a href="cadastro.php"><button class="btn btn-success mb-2">Cadastrar Veiculo/Motorista</button></a>
                 <a href="logout.php"><button class="btn btn-success mb-2">Desconectar Sessão</button></a>

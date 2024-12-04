@@ -1,10 +1,14 @@
 let infoWindow;
+let markers = []; // Armazena os marcadores no mapa
+let pontosInteresse = []; // Armazena os pontos de interesse para ordenação
+
 function initMap() {
     const map = new google.maps.Map(document.getElementById("map"), {
         center: { lat: -23.55052, lng: -46.633308 }, // Localização inicial (São Paulo)
         zoom: 15,
     });
     infoWindow = new google.maps.InfoWindow();
+
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
             (position) => {
@@ -21,13 +25,6 @@ function initMap() {
                         scaledSize: new google.maps.Size(40, 40), // Tamanho do ícone
                     },
                 });
-
-
-
-
-                // infoWindow.setPosition(pos);
-                // infoWindow.setContent("Seu endereço.");
-                // infoWindow.open(map);
                 map.setCenter(pos);
             },
             () => {
@@ -35,12 +32,10 @@ function initMap() {
             }
         );
     } else {
-        // Browser doesn't support Geolocation
         handleLocationError(false, infoWindow, map.getCenter());
     }
 
-    loadPoints(map);
-
+    loadPoints(map); // Carregar os pontos de interesse no mapa
 }
 
 function handleLocationError(browserHasGeolocation, infoWindow, pos) {
@@ -54,8 +49,6 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
 }
 
 function loadPoints(map) {
-    let markers = []; // Armazena os marcadores adicionados ao mapa
-
     function updatePoints() {
         $.ajax({
             url: "./php/ponto/pontos2.php", // URL do arquivo PHP que gera o XML
@@ -65,6 +58,7 @@ function loadPoints(map) {
                 // Remover marcadores antigos antes de adicionar novos
                 markers.forEach(marker => marker.setMap(null));
                 markers = [];
+                pontosInteresse = []; // Limpa os pontos de interesse antes de carregar novos
 
                 // Processar os dados do XML
                 $(data).find("marker").each(function () {
@@ -75,11 +69,16 @@ function loadPoints(map) {
                     const lat = parseFloat($(this).attr("lat"));
                     const lng = parseFloat($(this).attr("lng"));
                     const address = $(this).attr("address");
-                    const price1 = $(this).attr("price1");
-                    const price2 = $(this).attr("price2");
-                    const price3 = $(this).attr("price3");
-                    const price4 = $(this).attr("price4");
-                    const price5 = $(this).attr("price5");
+                    const price1 = parseFloat($(this).attr("price1"));
+                    const price2 = parseFloat($(this).attr("price2"));
+                    const price3 = parseFloat($(this).attr("price3"));
+                    const price4 = parseFloat($(this).attr("price4"));
+                    const price5 = parseFloat($(this).attr("price5"));
+
+                    // Armazenar o ponto de interesse
+                    pontosInteresse.push({
+                        id, name, yearAdded, city, lat, lng, address, price1, price2, price3, price4, price5
+                    });
 
                     // Criar marcador no mapa
                     const marker = new google.maps.Marker({
@@ -106,43 +105,40 @@ function loadPoints(map) {
                         </div>
                     `;
 
-                    const infoWindow = new google.maps.InfoWindow({
-                        content: infoContent,
-                    });
-
-                    // Adicionar evento para abrir InfoWindow ao clicar no marcador
-                    marker.addListener("click", () => {
+                    // Evento de clique no marcador
+                    google.maps.event.addListener(marker, "click", () => {
+                        infoWindow.setContent(infoContent);
                         infoWindow.open(map, marker);
                     });
 
-                    // Adicionar marcador ao array de marcadores
                     markers.push(marker);
+
                 });
 
-                // Agendar a próxima atualização em 10 segundos
-                setTimeout(updatePoints, 10000);
-                console.log('Atualizou');
-            },
-            error: function () {
-                console.error("Erro ao carregar os pontos de interesse.");
-                // Tentar novamente após 10 segundos em caso de erro
-                setTimeout(updatePoints, 10000);
-                console.log('Atualizou com erro');
-            },
+
+            }
         });
     }
 
-    // Primeira chamada para carregar os pontos
-    updatePoints();
+    updatePoints(); // Carregar os pontos inicialmente
 }
 
+function atualizarTabela() {
+    const tipoPreco = document.getElementById('gasolinaTipo').value;
+    const tabela = document.getElementById('tabelaPontos').getElementsByTagName('tbody')[0];
+    tabela.innerHTML = '';
 
+    // Ordenar os pontos com base no tipo de gasolina
+    const sortedPoints = pontosInteresse.sort((a, b) => a[tipoPreco] - b[tipoPreco]);
 
-
-
-
-
-
-
-
-window.onload = initMap; 
+    // Preencher a tabela com os pontos ordenados
+    sortedPoints.forEach(ponto => {
+        const row = tabela.insertRow();
+        row.innerHTML = `
+            <td>${ponto.name}</td>
+            <td>${ponto.city}</td>
+            <td>${ponto.address}</td>
+            <td>R$ ${ponto[tipoPreco]}</td>
+        `;
+    });
+}
