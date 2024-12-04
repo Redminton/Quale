@@ -1,6 +1,5 @@
 <?php
-// Configuração da conexão com o banco de dados
-include 'config.php'; // Este arquivo deve conter as configurações de conexão com o banco de dados
+include 'config.php';
 
 class Ponto
 {
@@ -11,7 +10,6 @@ class Ponto
         $this->pdo = $pdo;
     }
 
-    // Método para buscar todos os pontos de interesse
     public function getAll()
     {
         $query = "SELECT id, nome, ano_adicao, cidade, longitude, latitude, endereco, preco1, preco2, preco3, preco4, preco5 FROM ponto";
@@ -21,11 +19,15 @@ class Ponto
     }
 }
 
-// Criar a instância da classe Ponto e buscar os dados
+
 $ponto = new Ponto($pdo);
 $pontos = $ponto->getAll();
 
-// Gerar XML com os dados dos pontos
+
+
+
+
+// Gerar XML
 header("Content-type: text/xml");
 echo "<?xml version='1.0' ?>";
 echo "<markers>";

@@ -54,64 +54,86 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
 }
 
 function loadPoints(map) {
-    const xmlUrl = "./php/postos.php"; // URL do arquivo PHP que gera o XML
-    fetch(xmlUrl)
-        .then((response) => response.text())
-        .then((data) => {
-            const parser = new DOMParser();
-            const xml = parser.parseFromString(data, "text/xml");
-            const markers = xml.getElementsByTagName("marker");
+    let markers = []; // Armazena os marcadores adicionados ao mapa
 
-            for (let i = 0; i < markers.length; i++) {
-                const id = markers[i].getAttribute("id");
-                const name = markers[i].getAttribute("name");
-                const yearAdded = markers[i].getAttribute("year_added");
-                const city = markers[i].getAttribute("city");
-                const lat = parseFloat(markers[i].getAttribute("lat"));
-                const lng = parseFloat(markers[i].getAttribute("lng"));
-                const address = markers[i].getAttribute("address");
-                const price1 = markers[i].getAttribute("price1");
-                const price2 = markers[i].getAttribute("price2");
-                const price3 = markers[i].getAttribute("price3");
-                const price4 = markers[i].getAttribute("price4");
-                const price5 = markers[i].getAttribute("price5");
+    function updatePoints() {
+        $.ajax({
+            url: "./php/postos.php", // URL do arquivo PHP que gera o XML
+            method: "GET",
+            dataType: "xml", // O retorno do PHP é esperado no formato XML
+            success: function (data) {
+                // Remover marcadores antigos antes de adicionar novos
+                markers.forEach(marker => marker.setMap(null));
+                markers = [];
 
-                // Criar marcador no mapa
-                const marker = new google.maps.Marker({
-                    position: { lat, lng },
-                    map,
-                    title: name,
+                // Processar os dados do XML
+                $(data).find("marker").each(function () {
+                    const id = $(this).attr("id");
+                    const name = $(this).attr("name");
+                    const yearAdded = $(this).attr("year_added");
+                    const city = $(this).attr("city");
+                    const lat = parseFloat($(this).attr("lat"));
+                    const lng = parseFloat($(this).attr("lng"));
+                    const address = $(this).attr("address");
+                    const price1 = $(this).attr("price1");
+                    const price2 = $(this).attr("price2");
+                    const price3 = $(this).attr("price3");
+                    const price4 = $(this).attr("price4");
+                    const price5 = $(this).attr("price5");
+
+                    // Criar marcador no mapa
+                    const marker = new google.maps.Marker({
+                        position: { lat, lng },
+                        map: map,
+                        title: name,
+                    });
+
+                    // Conteúdo do InfoWindow
+                    const infoContent = `
+                        <div>
+                            <h5>${name}</h5>
+                            <p><strong>Endereço:</strong> ${address}</p>
+                            <p><strong>Cidade:</strong> ${city}</p>
+                            <p><strong>Ano de Adição:</strong> ${yearAdded}</p>
+                            <p><strong>Preços:</strong></p>
+                            <ul>
+                                <li>Preço 1: R$ ${price1}</li>
+                                <li>Preço 2: R$ ${price2}</li>
+                                <li>Preço 3: R$ ${price3}</li>
+                                <li>Preço 4: R$ ${price4}</li>
+                                <li>Preço 5: R$ ${price5}</li>
+                            </ul>
+                        </div>
+                    `;
+
+                    const infoWindow = new google.maps.InfoWindow({
+                        content: infoContent,
+                    });
+
+                    // Adicionar evento para abrir InfoWindow ao clicar no marcador
+                    marker.addListener("click", () => {
+                        infoWindow.open(map, marker);
+                    });
+
+                    // Adicionar marcador ao array de marcadores
+                    markers.push(marker);
                 });
 
-                // Conteúdo do InfoWindow
-                const infoContent = `
-                    <div>
-                        <h5>${name}</h5>
-                        <p><strong>Endereço:</strong> ${address}</p>
-                        <p><strong>Cidade:</strong> ${city}</p>
-                        <p><strong>Ano de Adição:</strong> ${yearAdded}</p>
-                        <p><strong>Preços:</strong></p>
-                        <ul>
-                            <li>Preço 1: R$ ${price1}</li>
-                            <li>Preço 2: R$ ${price2}</li>
-                            <li>Preço 3: R$ ${price3}</li>
-                            <li>Preço 4: R$ ${price4}</li>
-                            <li>Preço 5: R$ ${price5}</li>
-                        </ul>
-                    </div>
-                `;
+                // Agendar a próxima atualização em 10 segundos
+                setTimeout(updatePoints, 10000);
+                console.log('Atualizou');
+            },
+            error: function () {
+                console.error("Erro ao carregar os pontos de interesse.");
+                // Tentar novamente após 10 segundos em caso de erro
+                setTimeout(updatePoints, 10000);
+                console.log('Atualizou com erro');
+            },
+        });
+    }
 
-                const infoWindow = new google.maps.InfoWindow({
-                    content: infoContent,
-                });
-
-                // Exibir InfoWindow ao clicar no marcador
-                marker.addListener("click", () => {
-                    infoWindow.open(map, marker);
-                });
-            }
-        })
-        .catch((error) => console.error("Erro ao carregar os pontos:", error));
+    // Primeira chamada para carregar os pontos
+    updatePoints();
 }
 
 
