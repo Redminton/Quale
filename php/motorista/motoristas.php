@@ -1,5 +1,5 @@
 <?php
-include 'config.php';
+include '../config.php';
 include 'Motorista.php';
 $motorista = new Motorista($pdo);
 $motoristas = $motorista->getAll();

@@ -1,7 +1,6 @@
 <?php
 include './testa_sessaoAdmin.php';
 ?>
-
 <!DOCTYPE html>
 <html>
 
@@ -99,6 +98,12 @@ include './testa_sessaoAdmin.php';
                         <li class="nav-item">
                             <button class="btn btn-link" onclick="toggleContent('#formCategoria')">Gerenciar Categorias</button>
                         </li>
+                        <li class="nav-item">
+                            <button class="btn btn-link" onclick="toggleContent('#formCategoria')">Gerenciar Usuários</button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="btn btn-link" onclick="toggleContent('#formCategoria')">Gerenciar Pontos de Interesse</button>
+                        </li>
                     </ul>
                 </div>
 
@@ -109,7 +114,10 @@ include './testa_sessaoAdmin.php';
                     <!-- Formulário de Veículo -->
                     <div id="formVeiculo" class="form-container">
                         <form id="veiculoForm">
-                            <input type="hidden" id="id_veiculo" name="id_veiculo">
+                            <div class="mb-3">
+                                <label for="id_veiculo" class="form-label">ID do Veículo:</label>
+                                <input type="number" id="id_veiculo" name="id_veiculo" class="form-control" required>
+                            </div>
                             <div class="mb-3">
                                 <label for="id_categoria" class="form-label">Categoria:</label>
                                 <select id="id_categoria" name="id_categoria" class="form-select" required>
@@ -152,27 +160,75 @@ include './testa_sessaoAdmin.php';
                         </table>
                     </div>
 
+                    <div id="formMotorista" class="form-container">
+                        <h2>Gerenciar Motoristas</h2>
+                        <form id="motoristaForm">
+                            <div class="mb-3">
+                                <label for="id_motorista" class="form-label">ID do Motorista:</label>
+                                <input type="number" id="id_motorista" name="id_motorista" class="form-control" required>
+                            </div>
 
+                            <div class="mb-3">
+                                <label for="nome_motorista" class="form-label">Nome do Motorista:</label>
+                                <input type="text" id="nome_motorista" name="nome_motorista" class="form-control" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="idade_motorista" class="form-label">Idade do Motorista:</label>
+                                <input type="number" id="idade_motorista" name="idade_motorista" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="cnh" class="form-label">CNH:</label>
+                                <input type="number" id="cnh" name="cnh" class="form-control" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="id_veiculo2" class="form-label">Veículo:</label>
+                                <select id="id_veiculo2" name="id_veiculo2" class="form-select" required>
+                                    <option value="" disabled selected>Escolha um veículo</option>
+                                </select>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Salvar</button>
+                        </form>
+
+                        <h3 class="mt-4">Lista de Motoristas</h3>
+                        <table id="tabelaMotoristas" class="table table-hover mt-3">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nome</th>
+                                    <th>Idade</th>
+                                    <th>CNH</th>
+                                    <th>Veículo</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Motoristas serão inseridos aqui via AJAX -->
+                            </tbody>
+                        </table>
+                    </div>
 
                 </div>
 
-                <!-- Formulário de Motorista (exemplo) -->
-                <div id="formMotorista" class="form-container">
-                    <p>Formulário de motoristas será exibido aqui...</p>
-                </div>
+            </div>
 
-                <!-- Formulário de Categoria (exemplo) -->
-                <div id="formCategoria" class="form-container">
-                    <p>Formulário de categorias será exibido aqui...</p>
-                </div>
 
-                <!-- Tabelas -->
-                <div id="tabelas" class="form-container">
-                    <h2>Listagem de Tabelas do Banco de Dados</h2>
-                    <ul id="tablesList"></ul>
-                </div>
+
+
+            <!-- Formulário de Categoria (exemplo) -->
+            <div id="formCategoria" class="form-container">
+                <p>Formulário de categorias será exibido aqui...</p>
+            </div>
+
+            <!-- Tabelas -->
+            <div id="tabelas" class="form-container">
+                <h2>Listagem de Tabelas do Banco de Dados</h2>
+                <ul id="tablesList"></ul>
             </div>
         </div>
+    </div>
     </div>
 
 
@@ -298,6 +354,7 @@ include './testa_sessaoAdmin.php';
                     success: function(response) {
                         carregarVeiculos();
                         $('#veiculoForm')[0].reset(); // Limpar o formulário
+
                     },
                     error: function(response) {
                         console.log(response);
@@ -347,6 +404,153 @@ include './testa_sessaoAdmin.php';
                 });
             }
         }
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <script>
+        $(document).ready(function() {
+            carregarVeiculos2();
+            carregarMotoristas();
+
+
+            function carregarVeiculos2() {
+                $.ajax({
+                    url: '../veiculo/veiculos.php',
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function(categorias) {
+
+                        $('#id_veiculo2').empty();
+
+                        $('#id_veiculo2').append(new Option('Escolha um veiculo', '', true, false));
+
+                        console.log('teste')
+
+                        categorias.forEach(function(veiculo) {
+
+                            const descricaoVeiculo = `${veiculo.nome_veiculo} (${veiculo.placa_veiculo})`;
+                            $('#id_veiculo2').append(new Option(descricaoVeiculo, veiculo.id_veiculo));
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        console.log('Erro ao carregar os veículos:', error);
+                    }
+                });
+            }
+
+
+
+
+
+
+
+
+            // Função para carregar a lista de motoristas
+            function carregarMotoristas() {
+                $.ajax({
+                    url: '../motorista/motoristas.php',
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function(motoristas) {
+                        let linhas = '';
+                        motoristas.forEach(function(motorista) {
+                            linhas += `<tr>
+                        <td>${motorista.id_motorista}</td>
+                        <td>${motorista.nome_motorista}</td>
+                        <td>${motorista.idade_motorista}</td>
+                        <td>${motorista.cnh}</td>
+                        <td>${motorista.placa_veiculo}</td>
+                        <td>
+                            <button class="btn btn-sm btn-warning me-1" onclick="editarMotorista(${motorista.id_motorista})">Editar</button>
+                            <button class="btn btn-sm btn-danger" onclick="deletarMotorista(${motorista.id_motorista})">Deletar</button>
+                        </td>
+                    </tr>`;
+                        });
+                        $('#tabelaMotoristas tbody').html(linhas);
+                    }
+                });
+            }
+
+            // Função para salvar motorista (adicionar ou editar)
+            $('#motoristaForm').on('submit', function(e) {
+                e.preventDefault();
+                let dados = $(this).serialize();
+                $.ajax({
+                    url: '../motorista/salvar_motorista.php',
+                    method: 'POST',
+                    data: dados,
+                    success: function(response) {
+                        carregarMotoristas();
+                        $('#motoristaForm')[0].reset(); // Limpa o formulário
+                        console.log(id_veiculo2);
+                    },
+                    error: function(response) {
+                        console.log('Erro:', response);
+                    }
+                });
+            });
+
+            // Função para editar motorista
+            window.editarMotorista = function(id_motorista) {
+                $.ajax({
+                    url: '../motorista/get_motorista.php',
+                    method: 'GET',
+                    data: {
+                        id_motorista: id_motorista
+                    },
+                    dataType: 'json',
+                    success: function(motorista) {
+                        $('#id_motorista').val(motorista.id_motorista);
+                        $('#nome_motorista').val(motorista.nome_motorista);
+                        $('#idade_motorista').val(motorista.idade_motorista);
+                        $('#cnh').val(motorista.cnh);
+                        $('#id_veiculo').val(motorista.id_veiculo); // Seleciona o veículo correto
+                    }
+                });
+            };
+
+            // Função para deletar motorista
+            window.deletarMotorista = function(id_motorista) {
+                if (confirm('Tem certeza que deseja deletar este motorista?')) {
+                    $.ajax({
+                        url: '../motorista/deletar_motorista.php',
+                        method: 'POST',
+                        data: {
+                            id_motorista: id_motorista
+                        },
+                        success: function(response) {
+                            carregarMotoristas();
+                        },
+                        error: function(response) {
+                            console.log('Erro:', response);
+                        }
+                    });
+                }
+            };
+        });
     </script>
 
 

@@ -83,6 +83,11 @@ class Veiculo
                                     JOIN categoriaVeiculo ON veiculo.id_categoria = categoriaVeiculo.id_categoria");
         return $query->fetchAll(PDO::FETCH_ASSOC);
     }
+    public function getAll2()
+    {
+        $query = $this->pdo->query("SELECT SELECT id_veiculo, placa_veiculo FROM veiculo");
+        return $query->fetchAll(PDO::FETCH_ASSOC);
+    }
 
 
 
