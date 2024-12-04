@@ -1,5 +1,5 @@
 
-let map, infoWindow;
+let infoWindow;
 
 function initMap() {
     map = new google.maps.Map(document.getElementById("map"), {

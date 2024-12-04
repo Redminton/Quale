@@ -60,7 +60,7 @@ function showError(error) {
 
 // Função para carregar os pontos do arquivo JSON
 function carregarPontos() {
-    $.getJSON('./pontos.json', function (pontos) {
+    $.getJSON('./js/pontos.json', function (pontos) {
         $.each(pontos, function (index, ponto) {
             marker = new google.maps.Marker({
                 position: new google.maps.LatLng(ponto.Latitude, ponto.Longitude),
@@ -70,12 +70,13 @@ function carregarPontos() {
         });
     }).fail(function (jqxhr, textStatus, error) {
         console.log("Erro ao carregar o JSON: " + textStatus + ", " + error);
+        debug();
     });
 }
 
 // Função de depuração para verificar os dados do JSON
 function debug() {
-    $.getJSON('./pontos.json', function (data) {
+    $.getJSON('./js/pontos.json', function (data) {
         //console.log(data); // Exibe os dados no console
     }).fail(function (jqxhr, textStatus, error) {
         console.log("Erro ao carregar o JSON: " + textStatus + ", " + error);
