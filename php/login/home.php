@@ -71,6 +71,7 @@ include './testa_sessao.php';
                         <div style="display: flex; gap: 10px;">
                             <button type="submit" class="btn btn-primary">Criar Rota</button>
                             <button type="button" class="btn btn-secondary" onclick="getCurrentLocation()">Usar Localização Atual</button>
+                            <button type="button" class="btn btn-secondary" id="saveButton">Salvar Viagem</button>
                         </div>
                     </form>
                 </div>

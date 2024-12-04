@@ -46,7 +46,6 @@ function initMap() {
 
 }
 
-// Função para obter a localização atual do usuário
 function getCurrentLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function (position) {
@@ -54,9 +53,8 @@ function getCurrentLocation() {
             const lng = position.coords.longitude;
             const origin = new google.maps.LatLng(lat, lng);
 
-
             document.getElementById("origin").value = `Latitude: ${lat}, Longitude: ${lng}`;
-            createRoute(origin);
+            createRoute(origin); // Calcula a rota a partir da localização atual
         });
     } else {
         alert("Geolocalização não é suportada por este navegador.");
@@ -76,11 +74,12 @@ function createRoute(origin) {
         if (status === "OK") {
             directionsRenderer.setDirections(response);
 
-            // Passar apenas leg e coordenadas para `displayRouteInfo`
+            // Extrair as informações relevantes da rota
             const leg = response.routes[0].legs[0];
             const originCoords = { lat: leg.start_location.lat(), lng: leg.start_location.lng() };
             const destinationCoords = { lat: leg.end_location.lat(), lng: leg.end_location.lng() };
 
+            // Exibir informações e preparar dados para salvar
             displayRouteInfo(leg, originCoords, destinationCoords);
         } else {
             console.log("Erro ao calcular a rota: " + status);
@@ -89,6 +88,8 @@ function createRoute(origin) {
 }
 
 // Exibir informações sobre a rota
+let viagemData = null; // Variável global para armazenar os dados da viagem
+
 function displayRouteInfo(leg, originCoords, destinationCoords) {
     const distance = leg.distance.text;
     const duration = leg.duration.text;
@@ -101,7 +102,7 @@ function displayRouteInfo(leg, originCoords, destinationCoords) {
     document.getElementById("routeInfo").style.display = "block";
 
     // Preparar os dados para envio ao servidor
-    const data = {
+    viagemData = {
         origemLat: originCoords.lat,         // Latitude de origem
         origemLng: originCoords.lng,         // Longitude de origem
         destLat: destinationCoords.lat,      // Latitude de destino
@@ -110,25 +111,33 @@ function displayRouteInfo(leg, originCoords, destinationCoords) {
         duracao: duration                    // Duração
     };
 
-    // Enviar os dados para o servidor
-    $.ajax({
-        url: '../calc/salvar_viagem.php',
-        type: 'POST',
-        data: data,
-        success: function (response) {
-            alert('Viagem salva com sucesso!');
-            console.log(response); // Exibe a resposta do servidor no console
-        },
-        error: function (xhr, status, error) {
-            console.error('Erro ao salvar a viagem:', error);
-        }
-    });
+    console.log("Dados preparados para salvar:", viagemData);
 }
 
+// Função para salvar os dados
+function salvarViagem() {
+    if (viagemData) {
+        $.ajax({
+            url: '../calc/salvar_viagem.php',
+            type: 'POST',
+            data: viagemData,
+            success: function (response) {
+                alert('Viagem salva com sucesso!');
+                console.log(response); // Exibe a resposta do servidor no console
+            },
+            error: function (xhr, status, error) {
+                console.error('Erro ao salvar a viagem:', error);
+            }
+        });
+    } else {
+        alert("Nenhuma viagem disponível para salvar.");
+    }
+}
 
+// Adicionar evento ao botão "Salvar Viagem"
+document.getElementById("saveButton").addEventListener("click", salvarViagem);
 
-
-// Submissão do formulário
+// Submissão do formulário (quando o usuário calcula a rota)
 document.getElementById("routeForm").addEventListener("submit", function (event) {
     event.preventDefault();
 
@@ -137,6 +146,7 @@ document.getElementById("routeForm").addEventListener("submit", function (event)
         createRoute(origin);
     }
 });
+
 
 
 
