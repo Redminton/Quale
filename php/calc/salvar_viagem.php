@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 
 // Verifica se o usuário está logado
@@ -40,8 +41,8 @@ try {
     $duracao = $_POST['duracao'];
 
     // Inserir a viagem no banco de dados
-    $query = "INSERT INTO viagens (id_motorista, origemLat, origemLng, destLat, destLng, distancia, duracao) 
-              VALUES (:id_motorista, :origemLat, :origemLng, :destLat, :destLng, :distancia, :duracao)";
+    $query = "INSERT INTO viagens (id_motorista, origemLat, origemLng, destLat, destLng, distancia, duracao)
+VALUES (:id_motorista, :origemLat, :origemLng, :destLat, :destLng, :distancia, :duracao)";
     $stmt = $conn->prepare($query);
     $stmt->bindParam(':id_motorista', $idMotorista, PDO::PARAM_INT);
     $stmt->bindParam(':origemLat', $origemLat, PDO::PARAM_STR);
@@ -52,7 +53,39 @@ try {
     $stmt->bindParam(':duracao', $duracao, PDO::PARAM_STR);
     $stmt->execute();
 
-    echo "Viagem salva com sucesso!";
+    // Recuperar o id da viagem inserida
+    $idViagem = $conn->lastInsertId();
+
+    // Recuperar os dados necessários para o cálculo do valor do combustível
+    $stmt = $conn->prepare("SELECT ve.media_veiculo, p.preco1
+FROM veiculo ve
+JOIN motorista m ON ve.id_veiculo = m.id_veiculo
+JOIN ponto p ON 1 = 1 -- Ajuste isso conforme a lógica do seu sistema (ex: buscar um ponto específico)
+WHERE m.id_motorista = :id_motorista");
+    $stmt->bindParam(':id_motorista', $idMotorista, PDO::PARAM_INT);
+    $stmt->execute();
+
+    if ($stmt->rowCount() == 0) {
+        echo "Dados do veículo ou ponto de combustível não encontrados.";
+        exit;
+    }
+
+    $dados = $stmt->fetch(PDO::FETCH_ASSOC);
+    $mediaVeiculo = $dados['media_veiculo'];
+    $precoCombustivel = $dados['preco1'];
+
+    // Calcular o valor do combustível
+    $distanciaNumerica = floatval(str_replace(' km', '', $distancia)); // Remove " km" e converte para número
+    $valorCombustivel = ($distanciaNumerica / $mediaVeiculo) * $precoCombustivel;
+
+    // Atualizar o valor do combustível na tabela viagens
+    $updateQuery = "UPDATE viagens SET val_combustivel = :val_combustivel WHERE id_viagem = :id_viagem";
+    $stmt = $conn->prepare($updateQuery);
+    $stmt->bindParam(':val_combustivel', $valorCombustivel, PDO::PARAM_STR);
+    $stmt->bindParam(':id_viagem', $idViagem, PDO::PARAM_INT);
+    $stmt->execute();
+
+    echo "Viagem salva e valor do combustível calculado com sucesso!";
 } catch (PDOException $e) {
     echo "Erro: " . $e->getMessage();
 }
