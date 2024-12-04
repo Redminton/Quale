@@ -1035,6 +1035,7 @@ include './testa_sessaoAdmin.php';
         // Quando a página carrega, oculta todos os formulários
         $(document).ready(function() {
             $(".form-container").hide();
+            toggleContent('#tabelas');
         });
     </script>
 </body>
