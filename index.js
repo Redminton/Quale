@@ -32,6 +32,7 @@ function initMap() {
             }
         );
     } else {
+        // Browser doesn't support Geolocation
         handleLocationError(false, infoWindow, map.getCenter());
     }
 
@@ -103,7 +104,7 @@ function loadPoints(map) {
                                 <li>Preço 5: R$ ${price5}</li>
                             </ul>
                         </div>
-                    `;
+                       ` ;
 
                     // Evento de clique no marcador
                     google.maps.event.addListener(marker, "click", () => {
@@ -112,10 +113,7 @@ function loadPoints(map) {
                     });
 
                     markers.push(marker);
-
                 });
-
-
             }
         });
     }
@@ -123,7 +121,7 @@ function loadPoints(map) {
     updatePoints(); // Carregar os pontos inicialmente
 }
 
-function atualizarTabela() {
+function Tabela() {
     const tipoPreco = document.getElementById('gasolinaTipo').value;
     const tabela = document.getElementById('tabelaPontos').getElementsByTagName('tbody')[0];
     tabela.innerHTML = '';
@@ -142,3 +140,5 @@ function atualizarTabela() {
         `;
     });
 }
+
+window.onload = initMap;
