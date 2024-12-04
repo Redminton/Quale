@@ -16,7 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $senha = $_POST['senha'];
 
         // Consulta SQL para verificar usuário, senha e tipo
-        $query = "SELECT nome_usuario, tipo FROM usuario WHERE nome_usuario = :nome AND senha = :senha";
+        $query = "SELECT nome_usuario, tipo_usuario FROM usuario WHERE nome_usuario = :nome AND senha_usuario = :senha";
         $stmt = $conn->prepare($query);
         $stmt->bindParam(':nome', $nome, PDO::PARAM_STR);
         $stmt->bindParam(':senha', $senha, PDO::PARAM_STR);
@@ -27,11 +27,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
             session_start(); // Inicia a sessão
-            $_SESSION['nome'] = $nome;  // Vincula o nome do usuário na sessão
-            $_SESSION['tipo'] = $user['tipo'];  // Armazena o tipo do usuário na sessão
+            $_SESSION['nome_usuario'] = $nome;  // Vincula o nome do usuário na sessão
+            $_SESSION['tipo_usuario'] = $user['tipo_usuario'];  // Armazena o tipo do usuário na sessão
 
             // Redireciona com base no tipo de usuário
-            if ($user['tipo'] === 'admin') {
+            if ($user['tipo_usuario'] === 'admin') {
                 header("Location: admin.php");  // Página inicial do administrador
             } else {
                 header("Location: home.php");  // Página inicial do usuário comum
@@ -50,6 +50,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 } else {
     // Se alguém tentar acessar este arquivo diretamente, redireciona para a página de login
-    header("Location: index.php");
+    header("Location: ../../index.html");
     exit();
 }

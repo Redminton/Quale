@@ -96,10 +96,7 @@ include './testa_sessaoAdmin.php';
                             <button class="btn btn-link" onclick="toggleContent('#formMotorista')">Gerenciar Motoristas</button>
                         </li>
                         <li class="nav-item">
-                            <button class="btn btn-link" onclick="toggleContent('#formCategoria')">Gerenciar Categorias</button>
-                        </li>
-                        <li class="nav-item">
-                            <button class="btn btn-link" onclick="toggleContent('#formCategoria')">Gerenciar Usuários</button>
+                            <button class="btn btn-link" onclick="toggleContent('#formUsuario')">Gerenciar Usuários</button>
                         </li>
                         <li class="nav-item">
                             <button class="btn btn-link" onclick="toggleContent('#formCategoria')">Gerenciar Pontos de Interesse</button>
@@ -113,6 +110,7 @@ include './testa_sessaoAdmin.php';
 
                     <!-- Formulário de Veículo -->
                     <div id="formVeiculo" class="form-container">
+                        <h2>Gerenciar Veículos</h2>
                         <form id="veiculoForm">
                             <div class="mb-3">
                                 <label for="id_veiculo" class="form-label">ID do Veículo:</label>
@@ -210,26 +208,83 @@ include './testa_sessaoAdmin.php';
                         </table>
                     </div>
 
+
+
+
+
+
+
+
+
+                    <div id="formUsuario" class="form-container">
+                        <h2>Gerenciar Usuários</h2>
+                        <form id="UsuarioForm">
+                            <div class="mb-3">
+                                <label for="id_usuario" class="form-label">ID do Usuario:</label>
+                                <input type="number" id="id_usuario" name="id_usuario" class="form-control" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="nome_usuario" class="form-label">Nome do Usuario:</label>
+                                <input type="text" id="nome_usuario" name="nome_usuario" class="form-control" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="senha_usuario" class="form-label">Senha do Usuario:</label>
+                                <input type="password" id="senha_usuario" name="senha_usuario" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="tipo_usuario" class="form-label">Tipo do Usuário:</label>
+                                <select id="tipo_usuario" name="tipo_usuario" class="form-select" required>
+                                    <option value="" disabled selected>Escolha o tipo de usuário</option>
+                                    <option value="ADMIN">ADMIN</option>
+                                    <option value="USER">USER</option>
+                                </select>
+                            </div>
+
+
+
+                            <div class="mb-3">
+                                <label for="id_motorista2" class="form-label">Motorista (opcional):</label>
+                                <select id="id_motorista2" name="id_motorista2" class="form-select">
+                                    <option value="" disabled selected>Escolha um Usuário</option>
+                                </select>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Salvar</button>
+                        </form>
+
+                        <h3 class="mt-4">Lista de Usuarios</h3>
+                        <table id="tabelaUsuarios" class="table table-hover mt-3">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nome</th>
+                                    <th>Senha</th>
+                                    <th>Tipo</th>
+                                    <th>Motorista</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Usuarios serão inseridos aqui via AJAX -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
-            </div>
-
-
-
-
-            <!-- Formulário de Categoria (exemplo) -->
-            <div id="formCategoria" class="form-container">
-                <p>Formulário de categorias será exibido aqui...</p>
-            </div>
-
-            <!-- Tabelas -->
-            <div id="tabelas" class="form-container">
-                <h2>Listagem de Tabelas do Banco de Dados</h2>
-                <ul id="tablesList"></ul>
+                <!-- Tabelas -->
+                <div id="tabelas" class="form-container">
+                    <h2>Listagem de Tabelas do Banco de Dados</h2>
+                    <ul id="tablesList"></ul>
+                </div>
             </div>
         </div>
+
     </div>
-    </div>
+
+
+
 
 
 
@@ -552,6 +607,133 @@ include './testa_sessaoAdmin.php';
             };
         });
     </script>
+
+
+
+
+
+
+
+
+
+
+    <script>
+        $(document).ready(function() {
+            carregarMotoristas2(); // Carregar motoristas para o select de motoristas no formulário de usuários
+            carregarUsuarios();
+            // Função para carregar a lista de motoristas
+            function carregarMotoristas2() {
+                $.ajax({
+                    url: '../motorista/motoristas.php', // URL que retorna a lista de motoristas
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function(motoristas) {
+                        // Preenche o select com motoristas
+                        $('#id_motorista2').empty();
+                        $('#id_motorista2').append(new Option('Escolha um motorista', '', true, false));
+
+                        motoristas.forEach(function(motorista) {
+                            $('#id_motorista2').append(new Option(`${motorista.nome_motorista} (${motorista.id_motorista})`, motorista.id_motorista));
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        console.log('Erro ao carregar os motoristas:', error);
+                    }
+                });
+            }
+
+            // Função para salvar ou editar usuário (com associação de motorista, se houver)
+            $('#UsuarioForm').on('submit', function(e) {
+                e.preventDefault();
+                let dados = $(this).serialize(); // Serializa o formulário para envio
+
+                $.ajax({
+                    url: '../usuario/salvar_usuario.php', // URL que processa o salvar de um usuário
+                    method: 'POST',
+                    data: dados,
+                    success: function(response) {
+                        // Após salvar, pode-se recarregar a lista de usuários ou fornecer feedback
+                        alert('Usuário salvo com sucesso!');
+                        carregarUsuarios(); // Opcional: carregar a lista de usuários
+                        $('#UsuarioForm')[0].reset(); // Limpa o formulário
+                    },
+                    error: function(response) {
+                        console.log('Erro:', response);
+                    }
+                });
+            });
+
+            // Função para carregar a lista de usuários
+            function carregarUsuarios() {
+                $.ajax({
+                    url: '../usuario/usuarios.php', // URL que retorna a lista de usuários
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function(usuarios) {
+                        let linhas = '';
+                        usuarios.forEach(function(usuario) {
+                            // Aqui você exibe a tabela de usuários, incluindo o motorista associado
+                            let motorista = usuario.id_motorista ? usuario.id_motorista : 'Não associado';
+                            linhas += `<tr>
+                            <td>${usuario.id_usuario}</td>
+                            <td>${usuario.nome_usuario}</td>
+                            <td>${usuario.senha_usuario}</td>
+                            <td>${usuario.tipo_usuario}</td>
+                            <td>${motorista}</td>
+                            <td>
+                                <button class="btn btn-sm btn-warning me-1" onclick="editarUsuario(${usuario.id_usuario})">Editar</button>
+                                <button class="btn btn-sm btn-danger" onclick="deletarUsuario(${usuario.id_usuario})">Deletar</button>
+                            </td>
+                        </tr>`;
+                        });
+                        $('#tabelaUsuarios tbody').html(linhas);
+                    },
+                    error: function(xhr, status, error) {
+                        console.log('Erro ao carregar usuários:', error);
+                    }
+                });
+            }
+
+            // Função para editar usuário
+            window.editarUsuario = function(id_usuario) {
+                $.ajax({
+                    url: '../usuario/get_usuario.php',
+                    method: 'GET',
+                    data: {
+                        id_usuario: id_usuario
+                    },
+                    dataType: 'json',
+                    success: function(usuario) {
+                        $('#id_usuario').val(usuario.id_usuario);
+                        $('#nome_usuario').val(usuario.nome_usuario);
+                        $('#senha_usuario').val(usuario.senha_usuario);
+                        $('#tipo_usuario').val(usuario.tipo_usuario); // Pode ser ajustado conforme a lógica do tipo de usuário
+                        $('#id_motorista2').val(usuario.id_motorista); // Preenche o select de motorista com a opção associada
+                    }
+                });
+            };
+
+            // Função para deletar usuário
+            window.deletarUsuario = function(id_usuario) {
+                if (confirm('Tem certeza que deseja deletar este usuário?')) {
+                    $.ajax({
+                        url: '../usuario/deletar_usuario.php',
+                        method: 'POST',
+                        data: {
+                            id_usuario: id_usuario
+                        },
+                        success: function(response) {
+                            carregarUsuarios();
+                        },
+                        error: function(response) {
+                            console.log('Erro:', response);
+                        }
+                    });
+                }
+            };
+        });
+    </script>
+
 
 
 

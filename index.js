@@ -58,7 +58,7 @@ function loadPoints(map) {
 
     function updatePoints() {
         $.ajax({
-            url: "./php/postos.php", // URL do arquivo PHP que gera o XML
+            url: "./php/postos/postos.php", // URL do arquivo PHP que gera o XML
             method: "GET",
             dataType: "xml", // O retorno do PHP é esperado no formato XML
             success: function (data) {
