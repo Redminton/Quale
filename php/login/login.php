@@ -32,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             // Redireciona com base no tipo de usuário
             if ($user['tipo'] === 'admin') {
-                header("Location: admin_home.php");  // Página inicial do administrador
+                header("Location: admin.php");  // Página inicial do administrador
             } else {
                 header("Location: home.php");  // Página inicial do usuário comum
             }

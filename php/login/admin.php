@@ -1,26 +1,18 @@
 <?php
-// Se o usuário estiver logado, exibe a página de boas-vindas
 include './testa_sessaoAdmin.php';
-echo "A session ID é: " . strtoupper(session_id());
-echo "<br> Seja bem vindo: -> " . $_SESSION['nome'];
 ?>
+
 <!DOCTYPE html>
 <html>
 
 <head>
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="./style.css" />
+    <link rel="stylesheet" href="../../style.css" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <title>Painel de Controle</title>
-    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- jQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
-    <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
     <style>
@@ -31,12 +23,28 @@ echo "<br> Seja bem vindo: -> " . $_SESSION['nome'];
         h1 {
             margin-bottom: 30px;
         }
+
+        .form-container {
+            display: none;
+            /* Esconde os formulários inicialmente */
+            animation: slideIn 0.5s forwards;
+        }
+
+        /* Animação para os formulários deslizantes */
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
     </style>
 
-
-
-
-
+    </style>
 </head>
 
 <body>
@@ -45,7 +53,7 @@ echo "<br> Seja bem vindo: -> " . $_SESSION['nome'];
             <div class="col-md-12">
                 <nav class="navbar navbar-expand-lg navbar-light bg-light">
                     <div class="container-fluid">
-                        <a class="navbar-brand" href="./index.html">index</a>
+                        <a class="navbar-brand" href="../../index.html">Menu inicial</a>
                         <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                             data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                             aria-expanded="false" aria-label="Toggle navigation">
@@ -54,13 +62,6 @@ echo "<br> Seja bem vindo: -> " . $_SESSION['nome'];
                         <div class="collapse navbar-collapse" id="navbarSupportedContent">
                             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                                 <li class="nav-item">
-                                    <a class="nav-link active" aria-current="page" href="./teste.html">Teste</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="./painel.html">Painel</a>
-                                </li>
-
-                                <li class="nav-item">
                                     <a class="nav-link " href="logout.php">Sair</a>
                                 </li>
                             </ul>
@@ -68,6 +69,89 @@ echo "<br> Seja bem vindo: -> " . $_SESSION['nome'];
                         </div>
                     </div>
                 </nav>
+            </div>
+        </div>
+
+
+
+        <div class="container-fluid">
+            <!-- Alerta de boas-vindas -->
+            <div id="welcomeMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>Bem-vindo!</strong> A session ID é: <strong><?php echo strtoupper(session_id()); ?></strong><br>
+                Seja bem-vindo, <strong><?php echo $_SESSION['nome']; ?></strong>!
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
+            <div class="row">
+                <!-- Menu Lateral -->
+                <div class="col-md-2" id="sidebar">
+                    <h4>Acessar Tabelas</h4>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <button class="btn btn-link" onclick="toggleContent('#tabelas')">Ver Tabelas</button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="btn btn-link" onclick="toggleContent('#formVeiculo')">Gerenciar Veículos</button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="btn btn-link" onclick="toggleContent('#formMotorista')">Gerenciar Motoristas</button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="btn btn-link" onclick="toggleContent('#formCategoria')">Gerenciar Categorias</button>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Conteúdo Principal -->
+                <div class="col-md-10">
+                    <h1 class="text-center">Painel de Controle</h1>
+
+                    <!-- Formulário de Veículo -->
+                    <div id="formVeiculo" class="form-container">
+                        <form id="veiculoForm">
+                            <input type="hidden" id="id_veiculo" name="id_veiculo">
+                            <div class="mb-3">
+                                <label for="id_categoria" class="form-label">Categoria:</label>
+                                <select id="id_categoria" name="id_categoria" class="form-select" required>
+                                    <option value="" disabled selected>Escolha uma categoria</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="ano_modelo" class="form-label">Ano Modelo:</label>
+                                <input type="date" id="ano_modelo" name="ano_modelo" class="form-control" min="1950-01-01" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="nome_veiculo" class="form-label">Nome Veiculo:</label>
+                                <input type="text" id="nome_veiculo" name="nome_veiculo" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="placa_veiculo" class="form-label">Placa Veiculo:</label>
+                                <input type="text" id="placa_veiculo" name="placa_veiculo" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="media_veiculo" class="form-label">media veiculo:</label>
+                                <input type="text" id="media_veiculo" name="media_veiculo" class="form-control" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Salvar</button>
+                        </form>
+                    </div>
+
+                    <!-- Formulário de Motorista (exemplo) -->
+                    <div id="formMotorista" class="form-container">
+                        <p>Formulário de motoristas será exibido aqui...</p>
+                    </div>
+
+                    <!-- Formulário de Categoria (exemplo) -->
+                    <div id="formCategoria" class="form-container">
+                        <p>Formulário de categorias será exibido aqui...</p>
+                    </div>
+
+                    <!-- Tabelas -->
+                    <div id="tabelas" class="form-container">
+                        <h2>Listagem de Tabelas do Banco de Dados</h2>
+                        <ul id="tablesList"></ul>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -94,68 +178,36 @@ echo "<br> Seja bem vindo: -> " . $_SESSION['nome'];
 
 
 
-        <div class="container">
-            <h1 class="text-center">Gerenciar Veiculos</h1>
 
 
-            <form id="veiculoForm">
-                <input type="hidden" id="id_veiculo" name="id_veiculo">
-
-                <div class="mb-3">
-                    <label for="id_categoria" class="form-label">Categoria:</label>
-                    <select id="id_categoria" name="id_categoria" class="form-select" required>
-                        <option value="" disabled selected>Escolha uma categoria</option>
-                    </select>
-                </div>
-
-                <div class="mb-3">
-                    <label for="ano_modelo" class="form-label">Ano Modelo:</label>
-                    <input type="date" id="ano_modelo" name="ano_modelo" class="form-control" min="1950-01-01" required>
-                </div>
-
-                <div class="mb-3">
-                    <label for="nome_veiculo" class="form-label">Nome Veiculo:</label>
-                    <input type="text" id="nome_veiculo" name="nome_veiculo" class="form-control" required>
-                </div>
-                <div class="mb-3">
-                    <label for="placa_veiculo" class="form-label">Placa Veiculo:</label>
-                    <input type="text" id="placa_veiculo" name="placa_veiculo" class="form-control" required>
-                </div>
-                <div class="mb-3">
-                    <label for="media_veiculo" class="form-label">media veiculo:</label>
-                    <input type="text" id="media_veiculo" name="media_veiculo" class="form-control" required>
-                </div>
-                <button type="submit" class="btn btn-primary">Salvar</button>
-            </form>
 
 
-            <table id="tabelaVeiculos" class="table table-hover mt-4">
-                <thead class="table-dark">
-                    <tr>
-                        <th>ID</th>
-                        <th>Categoria</th>
-                        <th>Ano Modelo</th>
-                        <th>Nome Veiculo</th>
-                        <th>Placa Veiculo</th>
-                        <th>Media veiculo</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Veiculos serão inseridos aqui via AJAX -->
-                </tbody>
-            </table>
+
+
+
+
+
+
+
+
+
+
+
+
+        <!--<div class="row d-flex ">
+            <div class="col-md-12    ">
+                <h3>
+
+                    Confira mais projetos By <a href="https://redminton.github.io"> redminton.cloud!
+                    </a>
+                </h3>
+            </div>
         </div>
+    </div>-->
 
 
 
-        <div class="row">
-            <div class="col-md-6">
 
-                <h1>Listagem de Tabelas do Banco de Dados</h1>
-                <!-- <button id="loadTables">Carregar Tabelas</button> -->
-                <ul id="tablesList"></ul>
-            </div>h3. Lorem ipsum dolor sit amet.
-        </div>
 
 
         <script>
@@ -167,7 +219,7 @@ echo "<br> Seja bem vindo: -> " . $_SESSION['nome'];
                 // Função para carregar categorias no select
                 function carregarCategorias() {
                     $.ajax({
-                        url: 'php/categorias.php',
+                        url: '../categorias.php',
                         method: 'GET',
                         dataType: 'json',
                         success: function(categorias) {
@@ -181,7 +233,7 @@ echo "<br> Seja bem vindo: -> " . $_SESSION['nome'];
                     e.preventDefault();
                     let dados = $(this).serialize();
                     $.ajax({
-                        url: 'php/salvarveiculo.php',
+                        url: '../salvarveiculo.php',
                         method: 'POST',
                         data: dados,
                         success: function(response) {
@@ -198,7 +250,7 @@ echo "<br> Seja bem vindo: -> " . $_SESSION['nome'];
 
                 function carregarVeiculos() {
                     $.ajax({
-                        url: 'php/veiculos.php',
+                        url: '../veiculos.php',
                         method: 'GET',
                         dataType: 'json',
                         success: function(veiculos) {
@@ -232,7 +284,7 @@ echo "<br> Seja bem vindo: -> " . $_SESSION['nome'];
 
             function editarVeiculo(id_veiculo) {
                 $.ajax({
-                    url: 'get_veiculo.php',
+                    url: '../get_veiculo.php',
                     method: 'GET',
                     data: {
                         id_veiculo: id_veiculo
@@ -255,7 +307,7 @@ echo "<br> Seja bem vindo: -> " . $_SESSION['nome'];
             function deletarVeiculo(id_veiculo) {
                 if (confirm("Tem certeza que deseja deletar este Veiculo?")) {
                     $.ajax({
-                        url: 'deletar_veiculo.php',
+                        url: '../deletar_veiculo.php',
                         method: 'POST',
                         data: {
                             id_veiculo: id_veiculo
@@ -291,7 +343,7 @@ echo "<br> Seja bem vindo: -> " . $_SESSION['nome'];
                 function carregartables() {
                     //  $('#loadTables').on('click', function () {
                     $.ajax({
-                        url: 'php/php2.php',
+                        url: '../php2.php',
                         method: 'GET',
                         dataType: 'json',
                         success: function(response) {
@@ -327,16 +379,6 @@ echo "<br> Seja bem vindo: -> " . $_SESSION['nome'];
         </script>
 
 
-        <div class="row d-flex ">
-            <div class="col-md-12    ">
-                <h3>
-
-                    Confira mais projetos By <a href="https://redminton.github.io"> redminton.cloud!
-                    </a>
-                </h3>
-            </div>
-        </div>
-    </div>
 
 
 
@@ -344,9 +386,24 @@ echo "<br> Seja bem vindo: -> " . $_SESSION['nome'];
 
 
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+            crossorigin="anonymous"></script>
+
+        <script>
+            // Função para alternar entre abrir e fechar os formulários e tabelas
+            function toggleContent(contentId) {
+                // Esconde todos os formulários
+                $(".form-container").hide();
+                // Exibe o conteúdo desejado
+                $(contentId).toggle();
+            }
+
+            // Quando a página carrega, oculta todos os formulários
+            $(document).ready(function() {
+                $(".form-container").hide();
+            });
+        </script>
 </body>
 
 </html>
