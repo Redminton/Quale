@@ -16,7 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $senha = $_POST['senha'];
 
         // Consulta SQL para verificar usuário, senha e tipo
-        $query = "SELECT nome_usuario, tipo_usuario FROM usuario WHERE nome_usuario = :nome AND senha_usuario = :senha";
+        $query = "SELECT id_usuario, nome_usuario, tipo_usuario, id_motorista FROM usuario WHERE nome_usuario = :nome AND senha_usuario = :senha";
         $stmt = $conn->prepare($query);
         $stmt->bindParam(':nome', $nome, PDO::PARAM_STR);
         $stmt->bindParam(':senha', $senha, PDO::PARAM_STR);
@@ -27,8 +27,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
             session_start(); // Inicia a sessão
-            $_SESSION['nome_usuario'] = $nome;  // Vincula o nome do usuário na sessão
-            $_SESSION['tipo_usuario'] = $user['tipo_usuario'];  // Armazena o tipo do usuário na sessão
+            $_SESSION['nome_usuario'] = $user['nome_usuario']; // Armazena o nome do usuário na sessão
+            $_SESSION['tipo_usuario'] = $user['tipo_usuario']; // Armazena o tipo de usuário na sessão
+            $_SESSION['id_motorista'] = $user['id_motorista']; // Armazena o id_motorista (se existir) na sessão
 
             // Redireciona com base no tipo de usuário
             if ($user['tipo_usuario'] === 'admin') {

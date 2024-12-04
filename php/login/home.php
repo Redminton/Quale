@@ -1,30 +1,101 @@
 <?php
-// Se o usuário estiver logado, exibe a página de boas-vindas
 include './testa_sessao.php';
-echo "A session ID é: ".strtoupper(session_id());
-echo "<br> Seja bem vindo: -> " . $_SESSION['nome'];
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bem-vindo</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../style.css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>Quale</title>
+    <style>
+        #map {
+            width: 100%;
+            height: 100vh;
+        }
+
+        .sidebar {
+            height: 100vh;
+            background-color: #adc4db;
+            padding: 20px;
+            position: fixed;
+            width: 300px;
+        }
+
+        .sidebar .form-container {
+            margin-top: 20px;
+        }
+
+        .content {
+            margin-left: 320px;
+            /* Para não sobrepor a barra lateral */
+        }
+
+        .route-info {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+    </style>
 </head>
+
 <body>
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header">
-                    <div class="card-body">
-                        <p>Você está logado com sucesso.</p>
-                        <a href="logout.php" class="btn btn-danger">Sair</a>
-                    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Barra lateral -->
+            <div class="col-3 sidebar d-flex flex-column">
+                <h5>Menu de Navegação</h5>
+                <a href="conectar.php"><button class="btn btn-primary mb-2">Acessar</button></a>
+                <button class="btn btn-secondary mb-2" onclick="precos()">Ver Preços</button>
+                <a href="cadastro.php"><button class="btn btn-success mb-2">Cadastrar Veiculo/Motorista</button></a>
+                <a href="logout.php"><button class="btn btn-success mb-2">Desconectar Sessão</button></a>
+
+                <!-- Formulário para criar rota -->
+                <div class="form-container">
+                    <form id="routeForm">
+                        <div class="mb-3">
+                            <label for="origin" class="form-label">Cidade de Origem</label>
+                            <input type="text" class="form-control" id="origin" placeholder="Digite a cidade ou deixe vazio para usar sua localização atual">
+                        </div>
+                        <div class="mb-3">
+                            <label for="destination" class="form-label">Cidade de Destino</label>
+                            <input type="text" class="form-control" id="destination" placeholder="Digite a cidade de destino">
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <button type="submit" class="btn btn-primary">Criar Rota</button>
+                            <button type="button" class="btn btn-secondary" onclick="getCurrentLocation()">Usar Localização Atual</button>
+                        </div>
+                    </form>
                 </div>
+                <!-- Informações da Rota -->
+                <div id="routeInfo" class="route-info" style="display:none;">
+                    <h5>Informações da Rota</h5>
+                    <p><strong>Kilometragem:</strong> <span id="distance"></span></p>
+                    <p><strong>Duração Estimada:</strong> <span id="duration"></span></p>
+                </div>
+            </div>
+
+            <!-- Mapa -->
+            <div class="col-9 content">
+                <div id="map"></div>
             </div>
         </div>
     </div>
+
+
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCilGvyLOyIkVM6UqxNZdg4XhIXEbyM0j4"></script>
+    <script src="home.js">
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

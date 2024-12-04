@@ -77,7 +77,7 @@ include './testa_sessaoAdmin.php';
             <!-- Alerta de boas-vindas -->
             <div id="welcomeMessage" class="alert alert-success alert-dismissible fade show" role="alert">
                 <strong>Bem-vindo!</strong> A session ID é: <strong><?php echo strtoupper(session_id()); ?></strong><br>
-                Seja bem-vindo, <strong><?php echo $_SESSION['nome']; ?></strong>!
+                Seja bem-vindo, <strong><?php echo $_SESSION['nome_usuario']; ?></strong>!
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
 
