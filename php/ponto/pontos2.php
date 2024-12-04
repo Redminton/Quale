@@ -1,25 +1,20 @@
 <?php
 include '../config.php';
-include 'Posto.php';
+include 'Ponto.php';
 
 
 
-$ponto = new Posto($pdo);
+$ponto = new Ponto($pdo);
 $pontos = $ponto->getAll();
 
-
-
-
-
-// Gerar XML
 header("Content-type: text/xml");
 echo "<?xml version='1.0' ?>";
 echo "<markers>";
 
 foreach ($pontos as $row) {
     echo "<marker ";
-    echo "id='" . htmlspecialchars($row['id']) . "' ";
-    echo "name='" . htmlspecialchars($row['nome']) . "' ";
+    echo "id='" . htmlspecialchars($row['id_ponto']) . "' ";
+    echo "name='" . htmlspecialchars($row['nome_ponto']) . "' ";
     echo "year_added='" . htmlspecialchars($row['ano_adicao']) . "' ";
     echo "city='" . htmlspecialchars($row['cidade']) . "' ";
     echo "lat='" . $row['latitude'] . "' ";
@@ -32,5 +27,4 @@ foreach ($pontos as $row) {
     echo "price5='" . $row['preco5'] . "' ";
     echo "/>";
 }
-
 echo "</markers>";

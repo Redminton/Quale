@@ -99,7 +99,7 @@ include './testa_sessaoAdmin.php';
                             <button class="btn btn-link" onclick="toggleContent('#formUsuario')">Gerenciar Usuários</button>
                         </li>
                         <li class="nav-item">
-                            <button class="btn btn-link" onclick="toggleContent('#formCategoria')">Gerenciar Pontos de Interesse</button>
+                            <button class="btn btn-link" onclick="toggleContent('#formPontos')">Gerenciar Pontos de Interesse</button>
                         </li>
                     </ul>
                 </div>
@@ -114,7 +114,7 @@ include './testa_sessaoAdmin.php';
                         <form id="veiculoForm">
                             <div class="mb-3">
                                 <label for="id_veiculo" class="form-label">ID do Veículo:</label>
-                                <input type="number" id="id_veiculo" name="id_veiculo" class="form-control" required>
+                                <input type="number" id="id_veiculo" name="id_veiculo" class="form-control">
                             </div>
                             <div class="mb-3">
                                 <label for="id_categoria" class="form-label">Categoria:</label>
@@ -221,7 +221,7 @@ include './testa_sessaoAdmin.php';
                         <form id="UsuarioForm">
                             <div class="mb-3">
                                 <label for="id_usuario" class="form-label">ID do Usuario:</label>
-                                <input type="number" id="id_usuario" name="id_usuario" class="form-control" required>
+                                <input type="number" id="id_usuario" name="id_usuario" class="form-control">
                             </div>
 
                             <div class="mb-3">
@@ -271,12 +271,112 @@ include './testa_sessaoAdmin.php';
                             </tbody>
                         </table>
                     </div>
-                </div>
 
-                <!-- Tabelas -->
-                <div id="tabelas" class="form-container">
-                    <h2>Listagem de Tabelas do Banco de Dados</h2>
-                    <ul id="tablesList"></ul>
+
+
+
+
+
+                    <div id="formPontos" class="form-container">
+                        <h2>Gerenciar Pontos</h2>
+                        <form id="PontoForm">
+                            <div class="mb-3">
+                                <label for="id_ponto" class="form-label">ID do Ponto:</label>
+                                <input type="number" id="id_ponto" name="id_ponto" class="form-control">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="nome_ponto" class="form-label">Nome do Ponto:</label>
+                                <input type="text" id="nome_ponto" name="nome_ponto" class="form-control" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="ano_adicao" class="form-label">Ano de Adição:</label>
+                                <input type="number" id="ano_adicao" name="ano_adicao" class="form-control" min="1900" max="2099" step="1" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="cidade" class="form-label">Cidade:</label>
+                                <input type="text" id="cidade" name="cidade" class="form-control" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="longitude" class="form-label">Longitude:</label>
+                                <input type="number" id="longitude" name="longitude" class="form-control" step="0.00000001" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="latitude" class="form-label">Latitude:</label>
+                                <input type="number" id="latitude" name="latitude" class="form-control" step="0.00000001" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="endereco" class="form-label">Endereço:</label>
+                                <input type="text" id="endereco" name="endereco" class="form-control" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="preco1" class="form-label">Preço 1:</label>
+                                <input type="number" id="preco1" name="preco1" class="form-control" step="0.01" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="preco2" class="form-label">Preço 2:</label>
+                                <input type="number" id="preco2" name="preco2" class="form-control" step="0.01" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="preco3" class="form-label">Preço 3:</label>
+                                <input type="number" id="preco3" name="preco3" class="form-control" step="0.01" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="preco4" class="form-label">Preço 4:</label>
+                                <input type="number" id="preco4" name="preco4" class="form-control" step="0.01" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="preco5" class="form-label">Preço 5:</label>
+                                <input type="number" id="preco5" name="preco5" class="form-control" step="0.01" required>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Salvar</button>
+                        </form>
+
+                        <h3 class="mt-4">Lista de Pontos</h3>
+                        <table id="tabelaPontos" class="table table-hover mt-3">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nome</th>
+                                    <th>Ano de Adição</th>
+                                    <th>Cidade</th>
+                                    <th>Longitude</th>
+                                    <th>Latitude</th>
+                                    <th>Endereço</th>
+                                    <th>Preços</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Pontos serão inseridos aqui via AJAX -->
+                            </tbody>
+                        </table>
+
+
+
+
+
+
+
+
+                    </div>
+
+                    <!-- Tabelas -->
+                    <div id="tabelas" class="form-container">
+                        <h2>Listagem de Tabelas do Banco de Dados</h2>
+                        <ul id="tablesList"></ul>
+                    </div>
                 </div>
             </div>
         </div>
@@ -735,6 +835,126 @@ include './testa_sessaoAdmin.php';
     </script>
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <script>
+        $(document).ready(function() {
+
+            carregarPontosList();
+
+            // Função para salvar ou editar ponto
+            $('#PontoForm').on('submit', function(e) {
+                e.preventDefault();
+                let dados = $(this).serialize(); // Serializa o formulário para envio
+
+                $.ajax({
+                    url: '../ponto/salvar_ponto.php', // URL que processa o salvar de um ponto
+                    method: 'POST',
+                    data: dados,
+                    success: function(response) {
+                        // Após salvar, pode-se recarregar a lista de pontos ou fornecer feedback
+                        alert('Ponto salvo com sucesso!');
+                        carregarPontosList(); // Opcional: carregar a lista de pontos
+                        $('#PontoForm')[0].reset(); // Limpa o formulário
+                    },
+                    error: function(response) {
+                        console.log('Erro:', response);
+                    }
+                });
+            });
+
+            // Função para carregar a lista de pontos
+            function carregarPontosList() {
+                $.ajax({
+                    url: '../ponto/pontos.php', // URL que retorna a lista de pontos
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function(pontos) {
+                        let linhas = '';
+                        pontos.forEach(function(ponto) {
+                            // Exibe a tabela de pontos
+                            linhas += `<tr>
+                        <td>${ponto.id_ponto}</td>
+                        <td>${ponto.nome_ponto}</td>
+                        <td>${ponto.ano_adicao}</td>
+                        <td>${ponto.cidade}</td>
+                        <td>${ponto.longitude}</td>
+                        <td>${ponto.latitude}</td>
+                        <td>${ponto.endereco}</td>
+                        <td>Preço 1: ${ponto.preco1}, Preço 2: ${ponto.preco2}, Preço 3: ${ponto.preco3}, Preço 4: ${ponto.preco4}, Preço 5: ${ponto.preco5}</td>
+                        <td>
+                            <button class="btn btn-sm btn-warning me-1" onclick="editarPonto(${ponto.id_ponto})">Editar</button>
+                            <button class="btn btn-sm btn-danger" onclick="deletarPonto(${ponto.id_ponto})">Deletar</button>
+                        </td>
+                    </tr>`;
+                        });
+                        $('#tabelaPontos tbody').html(linhas);
+                    },
+                    error: function(xhr, status, error) {
+                        console.log('Erro ao carregar pontos:', error);
+                    }
+                });
+            }
+
+            // Função para editar ponto
+            window.editarPonto = function(id_ponto) {
+                $.ajax({
+                    url: '../ponto/get_ponto.php',
+                    method: 'GET',
+                    data: {
+                        id_ponto: id_ponto
+                    },
+                    dataType: 'json',
+                    success: function(ponto) {
+                        $('#id_ponto').val(ponto.id_ponto);
+                        $('#nome_ponto').val(ponto.nome_ponto);
+                        $('#ano_adicao').val(ponto.ano_adicao);
+                        $('#cidade').val(ponto.cidade);
+                        $('#longitude').val(ponto.longitude);
+                        $('#latitude').val(ponto.latitude);
+                        $('#endereco').val(ponto.endereco);
+                        $('#preco1').val(ponto.preco1);
+                        $('#preco2').val(ponto.preco2);
+                        $('#preco3').val(ponto.preco3);
+                        $('#preco4').val(ponto.preco4);
+                        $('#preco5').val(ponto.preco5);
+                    }
+                });
+            };
+
+            // Função para deletar ponto
+            window.deletarPonto = function(id_ponto) {
+                if (confirm('Tem certeza que deseja deletar este ponto?')) {
+                    $.ajax({
+                        url: '../ponto/deletar_ponto.php',
+                        method: 'POST',
+                        data: {
+                            id_ponto: id_ponto
+                        },
+                        success: function(response) {
+                            carregarPontosList();
+                        },
+                        error: function(response) {
+                            console.log('Erro:', response);
+                        }
+                    });
+                }
+            };
+        });
+    </script>
 
 
 
