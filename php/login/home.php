@@ -119,6 +119,11 @@ include './testa_sessao.php';
                         </div>
                     </form>
                 </div>
+                <div id="routeInfo" class="route-info" style="display:none;">
+                    <h5>Informações da Rota</h5>
+                    <p><strong>Kilometragem:</strong> <span id="distance"></span></p>
+                    <p><strong>Duração Estimada:</strong> <span id="duration"></span></p>
+                </div>
             </div>
 
             <!-- Mapa central -->

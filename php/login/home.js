@@ -28,7 +28,7 @@ function initMap() {
                         },
                     });
                     map.setCenter(pos);
-                    setTimeout(center, 2000);
+                    setTimeout(center, 20000);
                     console.log("Moveu");
                 },
                 () => {
@@ -93,13 +93,26 @@ let viagemData = null; // Variável global para armazenar os dados da viagem
 function displayRouteInfo(leg, originCoords, destinationCoords) {
     const distance = leg.distance.text;
     const duration = leg.duration.text;
+    console.log(1);
+    document.getElementById("routeInfo").style.display = "block";
+    // Verifica se o elemento #distance existe antes de tentar modificar seu conteúdo
+    const distanceElement = document.getElementById("distance");
+    if (distanceElement) {
+        distanceElement.textContent = distance;
+    } else {
+        console.error('Elemento #distance não encontrado.');
+    }
 
-    // Exibir a distância e duração no painel lateral
-    document.getElementById("distance").textContent = distance;
-    document.getElementById("duration").textContent = duration;
+    // Verifica se o elemento #duration existe antes de tentar modificar seu conteúdo
+    const durationElement = document.getElementById("duration");
+    if (durationElement) {
+        durationElement.textContent = duration;
+    } else {
+        console.error('Elemento #duration não encontrado.');
+    }
 
     // Tornar a seção de informações visível
-    document.getElementById("routeInfo").style.display = "block";
+
 
     // Preparar os dados para envio ao servidor
     viagemData = {
@@ -117,6 +130,13 @@ function displayRouteInfo(leg, originCoords, destinationCoords) {
 // Função para salvar os dados
 function salvarViagem() {
     if (viagemData) {
+        // Obter o tipo de combustível selecionado
+        const fuelType = $('#fuelType').val(); // 'preco1', 'preco2', etc.
+
+        // Adicionar o tipo de combustível e preço ao objeto viagemData
+        viagemData.fuelType = fuelType;
+
+        // Agora, fazer a requisição AJAX com a viagemData incluindo o preço do combustível
         $.ajax({
             url: '../calc/salvar_viagem.php',
             type: 'POST',
@@ -133,6 +153,7 @@ function salvarViagem() {
         alert("Nenhuma viagem disponível para salvar.");
     }
 }
+
 
 // Adicionar evento ao botão "Salvar Viagem"
 document.getElementById("saveButton").addEventListener("click", salvarViagem);

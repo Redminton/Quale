@@ -39,6 +39,7 @@ try {
     $destLng = $_POST['destLng'];
     $distancia = $_POST['distancia'];
     $duracao = $_POST['duracao'];
+    $fuelType = $_POST['fuelType']; // Tipo de combustível selecionado (preco1, preco2, etc.)
 
     // Inserir a viagem no banco de dados
     $query = "INSERT INTO viagens (id_motorista, origemLat, origemLng, destLat, destLng, distancia, duracao)
@@ -57,11 +58,14 @@ VALUES (:id_motorista, :origemLat, :origemLng, :destLat, :destLng, :distancia, :
     $idViagem = $conn->lastInsertId();
 
     // Recuperar os dados necessários para o cálculo do valor do combustível
-    $stmt = $conn->prepare("SELECT ve.media_veiculo, p.preco1
-FROM veiculo ve
-JOIN motorista m ON ve.id_veiculo = m.id_veiculo
-JOIN ponto p ON 1 = 1 -- Ajuste isso conforme a lógica do seu sistema (ex: buscar um ponto específico)
-WHERE m.id_motorista = :id_motorista");
+    // Aqui estamos selecionando a coluna específica de preço com base no tipo de combustível selecionado
+    $sql = "SELECT ve.media_veiculo, p.$fuelType
+            FROM veiculo ve
+            JOIN motorista m ON ve.id_veiculo = m.id_veiculo
+            JOIN ponto p ON 1 = 1 -- Ajuste conforme a lógica do seu sistema
+            WHERE m.id_motorista = :id_motorista";
+
+    $stmt = $conn->prepare($sql);
     $stmt->bindParam(':id_motorista', $idMotorista, PDO::PARAM_INT);
     $stmt->execute();
 
@@ -72,7 +76,7 @@ WHERE m.id_motorista = :id_motorista");
 
     $dados = $stmt->fetch(PDO::FETCH_ASSOC);
     $mediaVeiculo = $dados['media_veiculo'];
-    $precoCombustivel = $dados['preco1'];
+    $precoCombustivel = $dados[$fuelType]; // O preço do combustível é dinâmico (baseado em preco1, preco2, etc.)
 
     // Calcular o valor do combustível
     $distanciaNumerica = floatval(str_replace(' km', '', $distancia)); // Remove " km" e converte para número
