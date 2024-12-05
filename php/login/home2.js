@@ -1,3 +1,5 @@
+
+
 function togglePriceTable() {
     const tableContainer = document.getElementById("priceTableContainer");
     if (tableContainer.style.display === "none" || tableContainer.style.display === "") {
@@ -22,37 +24,26 @@ function populateTable() {
                 const posto = $(this).attr("name");
                 const endereco = $(this).attr("address");
                 const prices = [];
-                let i = 1;
 
-                // Iterar dinamicamente por todos os preços
+                // Iterar dinamicamente por todos os preços (price1, price2, ...)
+                let i = 1;
                 while ($(this).attr(`price${i}`)) {
-                    prices.push(`<option value="price${i}">Gasolina ${i} - R$ ${$(this).attr(`price${i}`)}</option>`);
+                    prices.push(`R$ ${$(this).attr(`price${i}`)}`);
                     i++;
                 }
 
-                // Criar linhas da tabela com seleção de preço
+                // Gerar as colunas de preços
+                const priceColumns = prices.map(price => `<td>${price}</td>`).join("");
+
+                // Construir a linha da tabela
                 const row = `
                     <tr>
                         <td>${posto}</td>
                         <td>${endereco}</td>
-                        <td>
-                            <select class="gasoline-select">
-                                ${prices.join("")}
-                            </select>
-                        </td>
-                        <td>
-                            <button class="save-route" data-posto="${posto}" data-endereco="${endereco}">
-                                Salvar Rota
-                            </button>
-                        </td>
+                        ${priceColumns}
                     </tr>
                 `;
                 tbody.innerHTML += row;
-            });
-
-            // Adicionar evento aos botões de salvar
-            document.querySelectorAll(".save-route").forEach(button => {
-                button.addEventListener("click", saveRoute);
             });
         },
         error: function () {
@@ -61,27 +52,5 @@ function populateTable() {
     });
 }
 
-// Salvar a rota
-function saveRoute(event) {
-    const button = event.target;
-    const posto = button.getAttribute("data-posto");
-    const endereco = button.getAttribute("data-endereco");
-    const select = button.closest("tr").querySelector(".gasoline-select");
-    const selectedPrice = select.value; // price1, price2, etc.
 
-    $.ajax({
-        url: "../salvar_viagem.php",
-        method: "POST",
-        data: {
-            posto,
-            endereco,
-            tipoPreco: selectedPrice,
-        },
-        success: function (response) {
-            alert("Rota salva com sucesso!");
-        },
-        error: function () {
-            alert("Erro ao salvar a rota. Tente novamente.");
-        },
-    });
-}
+

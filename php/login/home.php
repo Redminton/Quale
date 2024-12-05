@@ -89,6 +89,29 @@ include './testa_sessao.php';
                             <label for="destination" class="form-label">Cidade de Destino</label>
                             <input type="text" class="form-control" id="destination" placeholder="Digite a cidade de destino">
                         </div>
+
+                        <!-- Select para Tipo de Gasolina -->
+                        <div class="mb-3">
+                            <label for="fuelType" class="form-label">Tipo de Gasolina</label>
+                            <select class="form-select" id="fuelType">
+                                <option value="preco1">Gasolina Comum</option>
+                                <option value="preco2">Gasolina Aditivada</option>
+                                <option value="preco3">Etanol</option>
+                                <option value="preco4">Diesel 500</option>
+                                <option value="preco5">Diesel 10</option>
+                            </select>
+                        </div>
+
+                        <!-- Select para Pontos de Interesse -->
+                        <div class="mb-3">
+                            <label for="poi" class="form-label">Escolha o Posto de Gasolina</label>
+                            <select class="form-select" id="poi">
+                                <option value="">Selecione um posto</option>
+                                <!-- As opções de postos serão carregadas aqui dinamicamente -->
+                            </select>
+                        </div>
+
+
                         <div class="d-flex flex-wrap gap-2">
                             <button type="submit" class="btn btn-primary">Criar Rota</button>
                             <button type="button" class="btn btn-secondary" onclick="getCurrentLocation()">Usar Localização Atual</button>
@@ -137,7 +160,48 @@ include './testa_sessao.php';
 
 
 
+    <script>
+        $(document).ready(function() {
+            // Carregar os postos ao carregar a página com o tipo de combustível inicial selecionado
+            carregarPostosList($('#fuelType').val());
 
+            // Evento para carregar os postos quando o tipo de combustível for selecionado
+            $('#fuelType').change(function() {
+                var tipoCombustivelSelecionado = $(this).val();
+                carregarPostosList(tipoCombustivelSelecionado); // Carregar postos de acordo com o combustível
+            });
+
+            // Função para carregar os postos de gasolina com base no tipo de combustível
+            function carregarPostosList(fuelType) {
+                $.ajax({
+                    url: '../ponto/pontos.php', // URL que retorna a lista de postos
+                    method: 'GET',
+                    dataType: 'json',
+                    data: {
+                        fuel_type: fuelType
+                    }, // Passando o tipo de combustível (preco1, preco2, etc.)
+                    success: function(postos) {
+                        let options = '<option value="">Selecione um posto</option>'; // Opção padrão
+
+                        postos.forEach(function(posto) {
+                            // Preencher o select com os postos e preços dinâmicos
+                            options += `
+                        <option value="${posto.id_ponto}">
+                            ${posto.nome_ponto} - R$ ${posto[fuelType]}
+                        </option>
+                    `;
+                        });
+
+                        // Atualiza o conteúdo do select com as opções dos postos
+                        $('#poi').html(options);
+                    },
+                    error: function(xhr, status, error) {
+                        console.log('Erro ao carregar postos:', error);
+                    }
+                });
+            }
+        });
+    </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCilGvyLOyIkVM6UqxNZdg4XhIXEbyM0j4"></script>
     <script src="home2.js"></script>
     <script src="home.js"></script>
