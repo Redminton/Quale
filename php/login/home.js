@@ -234,19 +234,8 @@ function loadPoints(map) {
         });
     }
 
-    // Primeira chamada para carregar os pontos
     updatePoints();
-
-
 }
-
-
-
-
-
-
-
-
 
 
 window.onload = initMap; 
