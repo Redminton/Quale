@@ -453,7 +453,6 @@ include './testa_sessaoAdmin.php';
                 success: function(categorias) {
                     $('#id_categoria').empty();
                     $('#id_categoria').append(new Option('Escolha uma categoria', '', true, false));
-                    console.log(id_categoria);
                     categorias.forEach(function(categoria) {
                         const isSelected = id_categoria && categoria.id_categoria == id_categoria;
                         $('#id_categoria').append(new Option(categoria.nome_categoria, categoria.id_categoria, isSelected, isSelected));
@@ -525,8 +524,6 @@ include './testa_sessaoAdmin.php';
                     $('#nome_veiculo').val(veiculo.nome_veiculo);
                     $('#placa_veiculo').val(veiculo.placa_veiculo);
                     $('#media_veiculo').val(veiculo.media_veiculo);
-
-                    console.log(veiculo.id_categoria);
                     carregarCategorias(veiculo.id_categoria);
 
                 },
@@ -580,53 +577,43 @@ include './testa_sessaoAdmin.php';
 
 
     <script>
-        $(document).ready(function() {
-            carregarVeiculos2();
-            carregarMotoristas();
+        carregarVeiculos2();
+        carregarMotoristas();
 
 
-            function carregarVeiculos2() {
-                $.ajax({
-                    url: '../veiculo/veiculos.php',
-                    method: 'GET',
-                    dataType: 'json',
-                    success: function(categorias) {
-
-                        $('#id_veiculo2').empty();
-
-                        $('#id_veiculo2').append(new Option('Escolha um veiculo', '', true, false));
-
-                        console.log('teste')
-
-                        categorias.forEach(function(veiculo) {
-
-                            const descricaoVeiculo = `${veiculo.nome_veiculo} (${veiculo.placa_veiculo})`;
-                            $('#id_veiculo2').append(new Option(descricaoVeiculo, veiculo.id_veiculo));
-                        });
-                    },
-                    error: function(xhr, status, error) {
-                        console.log('Erro ao carregar os veículos:', error);
-                    }
-                });
-            }
+        function carregarVeiculos2(id_veiculo = null) {
+            $.ajax({
+                url: '../veiculo/veiculos.php',
+                method: 'GET',
+                dataType: 'json',
+                success: function(veiculos) {
+                    $('#id_veiculo2').empty();
+                    $('#id_veiculo2').append(new Option('Escolha um veiculo', '', true, false));
+                    veiculos.forEach(function(veiculo) {
+                        const isSelected = id_veiculo && veiculo.id_veiculo == id_veiculo;
+                        $('#id_veiculo2').append(new Option(veiculo.placa_veiculo, veiculo.id_veiculo, isSelected, isSelected));
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.log('Erro ao carregar os veículos:', error);
+                }
+            });
+        }
 
 
 
 
 
-
-
-
-            // Função para carregar a lista de motoristas
-            function carregarMotoristas() {
-                $.ajax({
-                    url: '../motorista/motoristas.php',
-                    method: 'GET',
-                    dataType: 'json',
-                    success: function(motoristas) {
-                        let linhas = '';
-                        motoristas.forEach(function(motorista) {
-                            linhas += `<tr>
+        // Função para carregar a lista de motoristas
+        function carregarMotoristas() {
+            $.ajax({
+                url: '../motorista/motoristas.php',
+                method: 'GET',
+                dataType: 'json',
+                success: function(motoristas) {
+                    let linhas = '';
+                    motoristas.forEach(function(motorista) {
+                        linhas += `<tr>
                         <td>${motorista.id_motorista}</td>
                         <td>${motorista.nome_motorista}</td>
                         <td>${motorista.idade_motorista}</td>
@@ -637,70 +624,69 @@ include './testa_sessaoAdmin.php';
                             <button class="btn btn-sm btn-danger" onclick="deletarMotorista(${motorista.id_motorista})">Deletar</button>
                         </td>
                     </tr>`;
-                        });
-                        $('#tabelaMotoristas tbody').html(linhas);
-                    }
-                });
-            }
+                    });
+                    $('#tabelaMotoristas tbody').html(linhas);
+                }
+            });
+        }
 
-            // Função para salvar motorista (adicionar ou editar)
-            $('#motoristaForm').on('submit', function(e) {
-                e.preventDefault();
-                let dados = $(this).serialize();
+        // Função para salvar motorista (adicionar ou editar)
+        $('#motoristaForm').on('submit', function(e) {
+            e.preventDefault();
+            let dados = $(this).serialize();
+            $.ajax({
+                url: '../motorista/salvar_motorista.php',
+                method: 'POST',
+                data: dados,
+                success: function(response) {
+                    carregarMotoristas();
+                    $('#motoristaForm')[0].reset();
+                    $('#id_motorista').val() // Limpa o formulário
+                    console.log(id_veiculo2);
+                },
+                error: function(response) {
+                    console.log('Erro:', response);
+                }
+            });
+        });
+
+        // Função para editar motorista
+        window.editarMotorista = function(id_motorista) {
+            $.ajax({
+                url: '../motorista/get_motorista.php',
+                method: 'GET',
+                data: {
+                    id_motorista: id_motorista
+                },
+                dataType: 'json',
+                success: function(motorista) {
+                    $('#id_motorista').val(motorista.id_motorista);
+                    $('#nome_motorista').val(motorista.nome_motorista);
+                    $('#idade_motorista').val(motorista.idade_motorista);
+                    $('#cnh').val(motorista.cnh);
+                    carregarVeiculos2(motorista.id_veiculo); // Seleciona o veículo correto
+                }
+            });
+        };
+
+        // Função para deletar motorista
+        window.deletarMotorista = function(id_motorista) {
+            if (confirm('Tem certeza que deseja deletar este motorista?')) {
                 $.ajax({
-                    url: '../motorista/salvar_motorista.php',
+                    url: '../motorista/deletar_motorista.php',
                     method: 'POST',
-                    data: dados,
+                    data: {
+                        id_motorista: id_motorista
+                    },
                     success: function(response) {
                         carregarMotoristas();
-                        $('#motoristaForm')[0].reset();
-                        $('#id_motorista').val() // Limpa o formulário
-                        console.log(id_veiculo2);
                     },
                     error: function(response) {
                         console.log('Erro:', response);
                     }
                 });
-            });
-
-            // Função para editar motorista
-            window.editarMotorista = function(id_motorista) {
-                $.ajax({
-                    url: '../motorista/get_motorista.php',
-                    method: 'GET',
-                    data: {
-                        id_motorista: id_motorista
-                    },
-                    dataType: 'json',
-                    success: function(motorista) {
-                        $('#id_motorista').val(motorista.id_motorista);
-                        $('#nome_motorista').val(motorista.nome_motorista);
-                        $('#idade_motorista').val(motorista.idade_motorista);
-                        $('#cnh').val(motorista.cnh);
-                        $('#id_veiculo').val(motorista.id_veiculo); // Seleciona o veículo correto
-                    }
-                });
-            };
-
-            // Função para deletar motorista
-            window.deletarMotorista = function(id_motorista) {
-                if (confirm('Tem certeza que deseja deletar este motorista?')) {
-                    $.ajax({
-                        url: '../motorista/deletar_motorista.php',
-                        method: 'POST',
-                        data: {
-                            id_motorista: id_motorista
-                        },
-                        success: function(response) {
-                            carregarMotoristas();
-                        },
-                        error: function(response) {
-                            console.log('Erro:', response);
-                        }
-                    });
-                }
-            };
-        });
+            }
+        };
     </script>
 
 
@@ -713,63 +699,66 @@ include './testa_sessaoAdmin.php';
 
 
     <script>
-        $(document).ready(function() {
-            carregarMotoristas2(); // Carregar motoristas para o select de motoristas no formulário de usuários
-            carregarUsuarios();
-            // Função para carregar a lista de motoristas
-            function carregarMotoristas2() {
-                $.ajax({
-                    url: '../motorista/motoristas.php', // URL que retorna a lista de motoristas
-                    method: 'GET',
-                    dataType: 'json',
-                    success: function(motoristas) {
-                        // Preenche o select com motoristas
-                        $('#id_motorista2').empty();
-                        $('#id_motorista2').append(new Option('Escolha um motorista', '', true, false));
-
-                        motoristas.forEach(function(motorista) {
-                            $('#id_motorista2').append(new Option(`${motorista.nome_motorista} (${motorista.id_motorista})`, motorista.id_motorista));
-                        });
-                    },
-                    error: function(xhr, status, error) {
-                        console.log('Erro ao carregar os motoristas:', error);
-                    }
-                });
-            }
-
-            // Função para salvar ou editar usuário (com associação de motorista, se houver)
-            $('#UsuarioForm').on('submit', function(e) {
-                e.preventDefault();
-                let dados = $(this).serialize(); // Serializa o formulário para envio
-
-                $.ajax({
-                    url: '../usuario/salvar_usuario.php', // URL que processa o salvar de um usuário
-                    method: 'POST',
-                    data: dados,
-                    success: function(response) {
-                        // Após salvar, pode-se recarregar a lista de usuários ou fornecer feedback
-                        alert('Usuário salvo com sucesso!');
-                        carregarUsuarios(); // Opcional: carregar a lista de usuários
-                        $('#UsuarioForm')[0].reset(); // Limpa o formulário
-                    },
-                    error: function(response) {
-                        console.log('Erro:', response);
-                    }
-                });
+        carregarMotoristas2(); // Carregar motoristas para o select de motoristas no formulário de usuários
+        carregarUsuarios();
+        // Função para carregar a lista de motoristas
+        function carregarMotoristas2(id_motorista = null) {
+            $.ajax({
+                url: '../motorista/motoristas.php', // URL que retorna a lista de motoristas
+                method: 'GET',
+                dataType: 'json',
+                success: function(motoristas) {
+                    $('#id_motorista2').empty();
+                    $('#id_motorista2').append(new Option('Escolha um motorista', '', true, false));
+                    console.log(id_motorista);
+                    motoristas.forEach(function(motorista) {
+                        const isSelected = id_motorista && motorista.id_motorista == id_motorista;
+                        $('#id_motorista2').append(new Option(motorista.nome_motorista, motorista.id_motorista, isSelected, isSelected));
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.log('Erro ao carregar os motoristas:', error);
+                }
             });
+        }
 
-            // Função para carregar a lista de usuários
-            function carregarUsuarios() {
-                $.ajax({
-                    url: '../usuario/usuarios.php', // URL que retorna a lista de usuários
-                    method: 'GET',
-                    dataType: 'json',
-                    success: function(usuarios) {
-                        let linhas = '';
-                        usuarios.forEach(function(usuario) {
-                            // Aqui você exibe a tabela de usuários, incluindo o motorista associado
-                            let motorista = usuario.id_motorista ? usuario.id_motorista : 'Não associado';
-                            linhas += `<tr>
+
+
+
+
+        // Função para salvar ou editar usuário (com associação de motorista, se houver)
+        $('#UsuarioForm').on('submit', function(e) {
+            e.preventDefault();
+            let dados = $(this).serialize(); // Serializa o formulário para envio
+
+            $.ajax({
+                url: '../usuario/salvar_usuario.php', // URL que processa o salvar de um usuário
+                method: 'POST',
+                data: dados,
+                success: function(response) {
+                    // Após salvar, pode-se recarregar a lista de usuários ou fornecer feedback
+                    alert('Usuário salvo com sucesso!');
+                    carregarUsuarios(); // Opcional: carregar a lista de usuários
+                    $('#UsuarioForm')[0].reset(); // Limpa o formulário
+                },
+                error: function(response) {
+                    console.log('Erro:', response);
+                }
+            });
+        });
+
+        // Função para carregar a lista de usuários
+        function carregarUsuarios() {
+            $.ajax({
+                url: '../usuario/usuarios.php', // URL que retorna a lista de usuários
+                method: 'GET',
+                dataType: 'json',
+                success: function(usuarios) {
+                    let linhas = '';
+                    usuarios.forEach(function(usuario) {
+                        // Aqui você exibe a tabela de usuários, incluindo o motorista associado
+                        let motorista = usuario.id_motorista ? usuario.id_motorista : 'Não associado';
+                        linhas += `<tr>
                             <td>${usuario.id_usuario}</td>
                             <td>${usuario.nome_usuario}</td>
                             <td>${usuario.senha_usuario}</td>
@@ -780,53 +769,52 @@ include './testa_sessaoAdmin.php';
                                 <button class="btn btn-sm btn-danger" onclick="deletarUsuario(${usuario.id_usuario})">Deletar</button>
                             </td>
                         </tr>`;
-                        });
-                        $('#tabelaUsuarios tbody').html(linhas);
-                    },
-                    error: function(xhr, status, error) {
-                        console.log('Erro ao carregar usuários:', error);
-                    }
-                });
-            }
+                    });
+                    $('#tabelaUsuarios tbody').html(linhas);
+                },
+                error: function(xhr, status, error) {
+                    console.log('Erro ao carregar usuários:', error);
+                }
+            });
+        }
 
-            // Função para editar usuário
-            window.editarUsuario = function(id_usuario) {
+        // Função para editar usuário
+        window.editarUsuario = function(id_usuario) {
+            $.ajax({
+                url: '../usuario/get_usuario.php',
+                method: 'GET',
+                data: {
+                    id_usuario: id_usuario
+                },
+                dataType: 'json',
+                success: function(usuario) {
+                    $('#id_usuario').val(usuario.id_usuario);
+                    $('#nome_usuario').val(usuario.nome_usuario);
+                    $('#senha_usuario').val(usuario.senha_usuario);
+                    $('#tipo_usuario').val(usuario.tipo_usuario).change(); // Pode ser ajustado conforme a lógica do tipo de usuário
+                    carregarMotoristas2(usuario.id_motorista);
+                }
+            });
+        };
+
+        // Função para deletar usuário
+        window.deletarUsuario = function(id_usuario) {
+            if (confirm('Tem certeza que deseja deletar este usuário?')) {
                 $.ajax({
-                    url: '../usuario/get_usuario.php',
-                    method: 'GET',
+                    url: '../usuario/deletar_usuario.php',
+                    method: 'POST',
                     data: {
                         id_usuario: id_usuario
                     },
-                    dataType: 'json',
-                    success: function(usuario) {
-                        $('#id_usuario').val(usuario.id_usuario);
-                        $('#nome_usuario').val(usuario.nome_usuario);
-                        $('#senha_usuario').val(usuario.senha_usuario);
-                        $('#tipo_usuario').val(usuario.tipo_usuario); // Pode ser ajustado conforme a lógica do tipo de usuário
-                        $('#id_motorista2').val(usuario.id_motorista); // Preenche o select de motorista com a opção associada
+                    success: function(response) {
+                        carregarUsuarios();
+                    },
+                    error: function(response) {
+                        console.log('Erro:', response);
                     }
                 });
-            };
-
-            // Função para deletar usuário
-            window.deletarUsuario = function(id_usuario) {
-                if (confirm('Tem certeza que deseja deletar este usuário?')) {
-                    $.ajax({
-                        url: '../usuario/deletar_usuario.php',
-                        method: 'POST',
-                        data: {
-                            id_usuario: id_usuario
-                        },
-                        success: function(response) {
-                            carregarUsuarios();
-                        },
-                        error: function(response) {
-                            console.log('Erro:', response);
-                        }
-                    });
-                }
-            };
-        });
+            }
+        };
     </script>
 
 
