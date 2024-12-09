@@ -259,4 +259,8 @@ function loadPoints(map) {
 }
 
 
+
+
+
+
 window.onload = initMap; 

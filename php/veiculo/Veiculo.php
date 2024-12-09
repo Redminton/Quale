@@ -118,7 +118,17 @@ class Veiculo
     // Método para obter um veículo pelo ID
     public function getById($id_veiculo)
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM veiculo WHERE id_veiculo = ?");
+        $stmt = $this->pdo->prepare("
+        SELECT 
+            id_veiculo, 
+            id_categoria, 
+            nome_veiculo, 
+            ano_modelo, 
+            placa_veiculo, 
+            media_veiculo
+        FROM veiculo 
+        WHERE id_veiculo = ?
+    ");
         $stmt->execute([$id_veiculo]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }

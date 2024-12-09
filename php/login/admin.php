@@ -163,7 +163,7 @@ include './testa_sessaoAdmin.php';
                         <form id="motoristaForm">
                             <div class="mb-3">
                                 <label for="id_motorista" class="form-label">ID do Motorista:</label>
-                                <input type="number" id="id_motorista" name="id_motorista" class="form-control" required>
+                                <input type="number" id="id_motorista" name="id_motorista" class="form-control">
                             </div>
 
                             <div class="mb-3">
@@ -442,45 +442,41 @@ include './testa_sessaoAdmin.php';
 
 
     <script>
-        $(document).ready(function() {
-            carregarCategorias();
-            carregarVeiculos();
+        carregarCategorias();
+        carregarVeiculos();
 
-            // Função para carregar categorias no select
-            function carregarCategorias() {
-                $.ajax({
-                    url: '../veiculo/categorias.php',
-                    method: 'GET',
-                    dataType: 'json',
-                    success: function(categorias) {
+        function carregarCategorias(id_categoria = null) {
+            $.ajax({
+                url: '../veiculo/categorias.php',
+                method: 'GET',
+                dataType: 'json',
+                success: function(categorias) {
+                    $('#id_categoria').empty();
+                    $('#id_categoria').append(new Option('Escolha uma categoria', '', true, false));
+                    console.log(id_categoria);
+                    categorias.forEach(function(categoria) {
+                        const isSelected = id_categoria && categoria.id_categoria == id_categoria;
+                        $('#id_categoria').append(new Option(categoria.nome_categoria, categoria.id_categoria, isSelected, isSelected));
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error('Erro ao carregar categorias:', status, error);
+                }
+            });
+        }
 
-                        $('#id_categoria').empty();
-
-                        $('#id_categoria').append(new Option('Escolha uma categoria', '', true, false));
-
-
-
-
-                        categorias.forEach(function(categoria) {
-                            $('#id_categoria').append(new Option(categoria.nome_categoria, categoria.id_categoria));
-                        });
-                    }
-                });
-            }
-
-            // Função para carregar veículos na tabela
-            function carregarVeiculos() {
-                $.ajax({
-                    url: '../veiculo/veiculos.php',
-                    method: 'GET',
-                    dataType: 'json',
-                    success: function(veiculos) {
-                        setTimeout(function() {
-                            carregarVeiculos()
-                        }, 5000)
-                        let linhas = '';
-                        veiculos.forEach(function(veiculo) {
-                            linhas += `<tr>
+        function carregarVeiculos() {
+            $.ajax({
+                url: '../veiculo/veiculos.php',
+                method: 'GET',
+                dataType: 'json',
+                success: function(veiculos) {
+                    setTimeout(function() {
+                        carregarVeiculos()
+                    }, 5000)
+                    let linhas = '';
+                    veiculos.forEach(function(veiculo) {
+                        linhas += `<tr>
                         <td>${veiculo.id_veiculo}</td>
                         <td>${veiculo.nome_categoria}</td>
                         <td>${veiculo.ano_modelo}</td>
@@ -492,29 +488,26 @@ include './testa_sessaoAdmin.php';
                             <button class="btn btn-sm btn-danger" onclick="deletarVeiculo(${veiculo.id_veiculo})">Deletar</button>
                         </td>
                     </tr>`;
-                        });
-                        $('#tabelaVeiculos tbody').html(linhas);
-                    }
-                });
-            }
+                    });
+                    $('#tabelaVeiculos tbody').html(linhas);
+                }
+            });
+        }
+        $('#veiculoForm').on('submit', function(e) {
+            e.preventDefault();
+            let dados = $(this).serialize();
+            $.ajax({
+                url: '../veiculo/salvarveiculo.php',
+                method: 'POST',
+                data: dados,
+                success: function(response) {
+                    carregarVeiculos();
+                    $('#veiculoForm')[0].reset(); // Limpar o formulário
 
-            // Salvar veículo
-            $('#veiculoForm').on('submit', function(e) {
-                e.preventDefault();
-                let dados = $(this).serialize();
-                $.ajax({
-                    url: '../veiculo/salvarveiculo.php',
-                    method: 'POST',
-                    data: dados,
-                    success: function(response) {
-                        carregarVeiculos();
-                        $('#veiculoForm')[0].reset(); // Limpar o formulário
-
-                    },
-                    error: function(response) {
-                        console.log(response);
-                    }
-                });
+                },
+                error: function(response) {
+                    console.log(response);
+                }
             });
         });
 
@@ -527,21 +520,22 @@ include './testa_sessaoAdmin.php';
                 },
                 dataType: 'json',
                 success: function(veiculo) {
-
                     $('#id_veiculo').val(veiculo.id_veiculo);
                     $('#ano_modelo').val(veiculo.ano_modelo);
                     $('#nome_veiculo').val(veiculo.nome_veiculo);
                     $('#placa_veiculo').val(veiculo.placa_veiculo);
                     $('#media_veiculo').val(veiculo.media_veiculo);
 
-                    // Atualizar o select de categorias para a categoria do veículo
-                    $('#id_categoria').val(veiculo.id_categoria); // Seleciona a categoria do veículo no select
+                    console.log(veiculo.id_categoria);
+                    carregarCategorias(veiculo.id_categoria);
+
+                },
+                error: function(xhr, status, error) {
+                    console.error('Erro ao obter dados do veículo:', status, error);
                 }
             });
         }
 
-
-        // Função para deletar o veículo
         function deletarVeiculo(id_veiculo) {
             if (confirm("Tem certeza que deseja deletar este Veiculo?")) {
                 $.ajax({
@@ -659,7 +653,8 @@ include './testa_sessaoAdmin.php';
                     data: dados,
                     success: function(response) {
                         carregarMotoristas();
-                        $('#motoristaForm')[0].reset(); // Limpa o formulário
+                        $('#motoristaForm')[0].reset();
+                        $('#id_motorista').val() // Limpa o formulário
                         console.log(id_veiculo2);
                     },
                     error: function(response) {
@@ -892,7 +887,7 @@ include './testa_sessaoAdmin.php';
                         <td>${ponto.ano_adicao}</td>
                         <td>${ponto.cidade}</td>
                         <td>${ponto.longitude}</td>
-                        <td>${ponto.latitude}</td>
+                         <td>${ponto.latitude}</td>
                         <td>${ponto.endereco}</td>
                         <td>Preço 1: ${ponto.preco1}, Preço 2: ${ponto.preco2}, Preço 3: ${ponto.preco3}, Preço 4: ${ponto.preco4}, Preço 5: ${ponto.preco5}</td>
                         <td>
