@@ -11,6 +11,7 @@ include './testa_sessao.php';
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <title>Qualé Home</title>
+    <link rel="shortcut icon" type="imagex/png" href="../../img/logo.png">
     <style>
         body {
             background-color: #D3F8E2;

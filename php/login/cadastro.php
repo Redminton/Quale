@@ -2,29 +2,57 @@
 include './testa_sessao.php';
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="../../style.css" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <title>Painel de Controle</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-
+    <title>Qualé Cadastro</title>
+    <link rel="shortcut icon" type="imagex/png" href="../../img/logo.png">
     <style>
         body {
             padding: 20px;
+            background-color: #D3F8E2;
         }
 
         h1 {
             margin-bottom: 30px;
         }
 
+        .rodape {
+            background-color: #198754;
+            border-radius: 3%;
+            text-align: center;
+            padding: 10px;
+            color: white;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .rodape a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .rodape h5 {
+            margin: 0;
+        }
+
+        .navbar-brand img {
+            max-width: 50px;
+            height: auto;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
         .form-container {
-            display: none;
+            display: block;
             /* Esconde os formulários inicialmente */
             animation: slideIn 0.5s forwards;
         }
@@ -50,63 +78,63 @@ include './testa_sessao.php';
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
-                <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <nav class="navbar navbar-expand-lg ">
                     <div class="container-fluid">
-                        <a class="navbar-brand" href="../../index.html">Menu inicial</a>
+                        <a class="navbar-brand" href="../../index.html">
+                            <img src="../../img/logo.png" alt="Logo">
+                            <span>Qualé</span>
+                        </a>
                         <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                            aria-expanded="false" aria-label="Toggle navigation">
+                            data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+                            aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
                         </button>
-                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                            <ul class="navbar-nav">
                                 <li class="nav-item">
-                                    <a class="nav-link " href="home.php">Voltar</a>
+                                    <a class="nav-link" href="home.php">Voltar</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link " href="logout.php">Sair</a>
+                                    <a class="nav-link" href="logout.php">Sair</a>
                                 </li>
                             </ul>
-
                         </div>
                     </div>
                 </nav>
             </div>
         </div>
-
-
-
-        <div class="container-fluid">
+        <div class="container-fluid"><br>
             <!-- Alerta de boas-vindas -->
             <div id="welcomeMessage" class="alert alert-success alert-dismissible fade show" role="alert">
                 <strong>Bem-vindo!</strong> A session ID é: <strong><?php echo strtoupper(session_id()); ?></strong><br>
                 Seja bem-vindo, <strong><?php echo $_SESSION['nome_usuario']; ?></strong>!
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
+            </div><br>
 
             <div class="row">
                 <!-- Menu Lateral -->
-                <div class="col-md-2" id="sidebar">
-                    <h4>Acessar Tabelas</h4>
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <button class="btn btn-link" onclick="toggleContent('#formVeiculo')">Gerenciar Veículos</button>
+                <div class="col-md-2" id="sidebar" style="background-color: #D3F8E2; height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px;">
+                    <h4 class="text-center mb-4">Acessar Tabelas</h4>
+                    <ul class="nav flex-column w-100">
+                        <li class="nav-item mb-3">
+                            <button class="btn btn-success w-100" onclick="toggleContent('#formVeiculo')">Gerenciar Veículos</button>
                         </li>
                         <li class="nav-item">
-                            <button class="btn btn-link" onclick="toggleContent('#formMotorista')">Gerenciar Motoristas</button>
+                            <button class="btn btn-primary w-100" onclick="toggleContent('#formMotorista')">Gerenciar Motoristas</button>
                         </li>
                     </ul>
                 </div>
 
+
                 <!-- Conteúdo Principal -->
                 <div class="col-md-10">
-                    <h1 class="text-center">Painel de Usuario</h1>
+
 
                     <!-- Formulário de Veículo -->
                     <div id="formVeiculo" class="form-container">
                         <h2>Gerenciar Veículos</h2>
                         <form id="veiculoForm">
-                            <div class="mb-3" style="display: none;">>
+                            <div class="mb-3" style="display: none;">
                                 <label for="id_veiculo" class="form-label">ID do Veículo:</label>
                                 <input type="hidden" id="id_veiculo" name="id_veiculo" class="form-control">
                             </div>
@@ -201,89 +229,13 @@ include './testa_sessao.php';
                             </tbody>
                         </table>
                     </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                 </div>
             </div>
         </div>
-    </div>
-
-    <!--<div class="row d-flex ">
-            <div class="col-md-12    ">
-                <h3>
-
-                    Confira mais projetos By <a href="https://redminton.github.io"> redminton.cloud!
-                    </a>
-                </h3>
-            </div>
+        <div class="rodape">
+            <h5>Confira mais projetos By <a href="https://redminton.github.io" target="_blank">redminton.cloud!</a></h5>
         </div>
-    </div>-->
-
-
-
-
-
+    </div>
 
     <script>
         $(document).ready(function() {
@@ -312,7 +264,6 @@ include './testa_sessao.php';
                 });
             }
 
-            // Função para carregar veículos na tabela
             function carregarVeiculos() {
                 $.ajax({
                     url: '../veiculo/veiculos.php',
@@ -338,8 +289,6 @@ include './testa_sessao.php';
                     }
                 });
             }
-
-            // Salvar veículo
             $('#veiculoForm').on('submit', function(e) {
                 e.preventDefault();
                 let dados = $(this).serialize();
@@ -359,36 +308,10 @@ include './testa_sessao.php';
             });
         });
     </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     <script>
         $(document).ready(function() {
             carregarVeiculos2();
             carregarMotoristas();
-
 
             function carregarVeiculos2() {
                 $.ajax({
@@ -415,14 +338,6 @@ include './testa_sessao.php';
                 });
             }
 
-
-
-
-
-
-
-
-            // Função para carregar a lista de motoristas
             function carregarMotoristas() {
                 $.ajax({
                     url: '../motorista/motoristas.php',
@@ -444,8 +359,6 @@ include './testa_sessao.php';
                     }
                 });
             }
-
-            // Função para salvar motorista (adicionar ou editar)
             $('#motoristaForm').on('submit', function(e) {
                 e.preventDefault();
                 let dados = $(this).serialize();
@@ -463,47 +376,18 @@ include './testa_sessao.php';
                     }
                 });
             });
-
-
-
-
         });
     </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
-
     <script>
-        // Função para alternar entre abrir e fechar os formulários e tabelas
         function toggleContent(contentId) {
-            // Esconde todos os formulários
             $(".form-container").hide();
-            // Exibe o conteúdo desejado
             $(contentId).toggle();
         }
-
-        // Quando a página carrega, oculta todos os formulários
         $(document).ready(function() {
-            $(".form-container").hide();
-            toggleContent('#tabelas');
+            toggleContent('#formVeiculo');
         });
     </script>
 </body>

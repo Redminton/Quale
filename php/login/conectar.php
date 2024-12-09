@@ -8,6 +8,7 @@
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <title>Qualé Login</title>
+    <link rel="shortcut icon" type="imagex/png" href="../../img/logo.png">
     <style>
         body {
             background-color: #D3F8E2;
@@ -33,7 +34,6 @@
 
         .rodape {
             background-color: #198754;
-            border-radius: 3%;
             text-align: center;
             padding: 10px;
             color: white;
