@@ -51,11 +51,16 @@ try {
             width: 100%;
             height: 100vh;
         }
+
+        body {
+            background-color: #D3F8E2;
+            margin: 0;
+        }
     </style>
 </head>
 
 <body>
-    <div class="container mt-5">
+    <div class="container mt-5 " style="padding: 0;">
 
         <div id="map"></div>
     </div>

@@ -6,22 +6,88 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="./style.css" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <title>Quale</title>
+    <title>Qualé</title>
+
     <style>
+        body {
+            background-color: #D3F8E2;
+        }
+
         #map {
             width: 100%;
-            height: 100vh;
+            height: 100%;
         }
 
         .sidebar {
             height: 100vh;
-            background-color: #adc4db;
+            background-color: #D3F8E2;
             padding: 20px;
+            overflow-y: auto;
+            padding-top: 2%;
+        }
+
+        .content {
+            height: 100vh;
+            padding: 0;
+        }
+
+        .map-container {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .sidebar .btn {
+            width: 100%;
+        }
+
+        .sidebar .form-control {
+            width: 100%;
+        }
+
+        #priceTableContainer {
+            position: absolute;
+            top: 10%;
+            left: 10%;
+            right: 10%;
+
+            background-color: white;
+            border: 1px solid #ddd;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            z-index: 1000;
+            display: none;
+            /* Oculto inicialmente */
+        }
+
+        #priceTableContainer table {
+            width: 100%;
+        }
+
+        #closeTable {
+            float: right;
+            cursor: pointer;
+            color: red;
+        }
+
+        .sidebar img {
+            width: 30%;
+        }
+
+        /* Estilos do modal */
+        .modal-content {
+            width: 90%;
+            max-width: 800px;
+        }
+
+        .rodape {
+            background-color: #198754;
+            border-radius: 3%
         }
     </style>
-
 </head>
 
 <body>
@@ -29,7 +95,13 @@
         <div class="row">
             <!-- Barra lateral -->
             <div class="col-3 sidebar d-flex flex-column">
-                <h5>Menu de Navegação</h5>
+                <div class="d-flex align-items-center justify-content-center w-100">
+                    <img src="img/logo.png" alt="Logo" style="height: auto;">
+                    <h5 class="ms-2 mb-0">Qualé</h5>
+                </div>
+                <br>
+
+
                 <a href="./php/login/conectar.php"><button class="btn btn-primary mb-2">Acessar</button></a>
                 <a href="./php/ponto/pontos2.php"><button class="btn btn-success mb-2">Ver Xml Pontos de
                         Interesse</button></a>
@@ -45,15 +117,43 @@
                         <option value="price4">Diesel 500</option>
                         <option value="price5">Diesel 10</option>
                     </select>
-                    <br>
-                    <button class="btn btn-primary mb-2" onclick="Tabela()">Acessar</button>
+
+                    <button class="btn btn-primary mb-2" onclick="Tabela2()">Ver Preços</button>
                 </div>
+
+                <footer class="text-white text-center py-3">
+                    <div class="rodape">
+                        <br>
+                        <h5>
+                            Confira mais projetos By <a href="https://redminton.github.io"
+                                class="text-white">redminton.cloud!</a>
+                        </h5>
+                        <br>
+                    </div>
+                </footer>
+
+
+
             </div>
 
-            <div class="col-9">
+
+
+
+            <div class="col-9" style="padding: 0;">
                 <div id="map"></div>
-                <div class="table-container">
-                    <h4>Tabela de Pontos de Interesse Ordenados</h4>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Tabela de Pontos de Interesse -->
+    <div class="modal fade" id="tabelaModal" tabindex="-1" aria-labelledby="tabelaModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="tabelaModalLabel">Tabela de Pontos de Interesse Ordenados</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
                     <table id="tabelaPontos" class="table table-striped">
                         <thead>
                             <tr>
@@ -72,9 +172,23 @@
         </div>
     </div>
 
+
+
+
+
+
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCilGvyLOyIkVM6UqxNZdg4XhIXEbyM0j4"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="index.js"></script>
+
+    <script>
+        // Função para abrir o modal com a tabela
+        function Tabela2() {
+            Tabela();
+            $('#tabelaModal').modal('show');
+            // Aqui você pode adicionar o código para preencher a tabela com os dados dinamicamente
+        }
+    </script>
 </body>
 
 </html>

@@ -425,16 +425,7 @@ include './testa_sessaoAdmin.php';
     </div>
 
 
-    <!--<div class="row d-flex ">
-            <div class="col-md-12    ">
-                <h3>
 
-                    Confira mais projetos By <a href="https://redminton.github.io"> redminton.cloud!
-                    </a>
-                </h3>
-            </div>
-        </div>
-    </div>-->
 
 
 

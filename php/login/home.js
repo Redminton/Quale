@@ -1,5 +1,7 @@
-
 let map;
+let infoWindow;
+let markers = []; // Armazena os marcadores no mapa
+let pontosInteresse = [];
 let directionsService;
 let directionsRenderer;
 
@@ -46,6 +48,7 @@ function initMap() {
 
 }
 
+
 function getCurrentLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function (position) {
@@ -54,6 +57,7 @@ function getCurrentLocation() {
             const origin = new google.maps.LatLng(lat, lng);
 
             document.getElementById("origin").value = `Latitude: ${lat}, Longitude: ${lng}`;
+            console.log(origin);
             createRoute(origin); // Calcula a rota a partir da localização atual
         });
     } else {
@@ -220,11 +224,11 @@ function loadPoints(map) {
                             <p><strong>Ano de Adição:</strong> ${yearAdded}</p>
                             <p><strong>Preços:</strong></p>
                             <ul>
-                                <li>Preço 1: R$ ${price1}</li>
-                                <li>Preço 2: R$ ${price2}</li>
-                                <li>Preço 3: R$ ${price3}</li>
-                                <li>Preço 4: R$ ${price4}</li>
-                                <li>Preço 5: R$ ${price5}</li>
+                                <li>Gasolina C: R$ ${price1}</li>
+                                <li>Gasolina A: R$ ${price2}</li>
+                                <li>Etanol: R$ ${price3}</li>
+                                <li>Diesel 500: R$ ${price4}</li>
+                                <li>Diesel 10: R$ ${price5}</li>
                             </ul>
                         </div>
                     `;
