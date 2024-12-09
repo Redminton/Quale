@@ -335,27 +335,27 @@ include './testa_sessaoAdmin.php';
                             </div>
 
                             <div class="mb-3">
-                                <label for="preco1" class="form-label">Preço 1:</label>
+                                <label for="preco1" class="form-label">Gasolina Comum:</label>
                                 <input type="number" id="preco1" name="preco1" class="form-control" step="0.01" required>
                             </div>
 
                             <div class="mb-3">
-                                <label for="preco2" class="form-label">Preço 2:</label>
+                                <label for="preco2" class="form-label">Gasolina Aditivada:</label>
                                 <input type="number" id="preco2" name="preco2" class="form-control" step="0.01" required>
                             </div>
 
                             <div class="mb-3">
-                                <label for="preco3" class="form-label">Preço 3:</label>
+                                <label for="preco3" class="form-label">Etanol:</label>
                                 <input type="number" id="preco3" name="preco3" class="form-control" step="0.01" required>
                             </div>
 
                             <div class="mb-3">
-                                <label for="preco4" class="form-label">Preço 4:</label>
+                                <label for="preco4" class="form-label">Diesel 500:</label>
                                 <input type="number" id="preco4" name="preco4" class="form-control" step="0.01" required>
                             </div>
 
                             <div class="mb-3">
-                                <label for="preco5" class="form-label">Preço 5:</label>
+                                <label for="preco5" class="form-label">Diesel 10:</label>
                                 <input type="number" id="preco5" name="preco5" class="form-control" step="0.01" required>
                             </div>
 
@@ -845,7 +845,7 @@ include './testa_sessaoAdmin.php';
                         <td>${ponto.longitude}</td>
                          <td>${ponto.latitude}</td>
                         <td>${ponto.endereco}</td>
-                        <td>Preço 1: ${ponto.preco1}, Preço 2: ${ponto.preco2}, Preço 3: ${ponto.preco3}, Preço 4: ${ponto.preco4}, Preço 5: ${ponto.preco5}</td>
+                        <td>GAC: ${ponto.preco1}, GAA: ${ponto.preco2}, ETA: ${ponto.preco3}, DI5: ${ponto.preco4}, DI1: ${ponto.preco5}</td>
                         <td>
                             <button class="btn btn-sm btn-warning me-1" onclick="editarPonto(${ponto.id_ponto})">Editar</button>
                             <button class="btn btn-sm btn-danger" onclick="deletarPonto(${ponto.id_ponto})">Deletar</button>
