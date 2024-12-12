@@ -30,7 +30,7 @@ function initMap() {
                         },
                     });
                     map.setCenter(pos);
-                    setTimeout(center, 20000);
+                    setTimeout(center, 10000);
                     console.log("Moveu");
                 },
                 () => {
